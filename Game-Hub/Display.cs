@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tic_Tac_Toe
+namespace Game_Hub
 {
 	class Display
 	{
@@ -67,7 +67,7 @@ namespace Tic_Tac_Toe
 			int blankSpace = Constants.WindowWidthSize-20;
 			int totalCharsHeader = Constants.WindowWidthSize;
 			message = AlignMessage(message, blankSpace);
-			string title = AlignMessage("Jogo da Velha", blankSpace);
+			string title = AlignMessage("Hub de Jogos", blankSpace);
 			Console.BackgroundColor = ConsoleColor.Green;
 
 			Console.WriteLine(new string('=', totalCharsHeader));

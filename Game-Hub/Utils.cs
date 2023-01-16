@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Tic_Tac_Toe
+namespace Game_Hub
 {
 	class Utils
 	{

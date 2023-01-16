@@ -1,4 +1,4 @@
-﻿namespace Tic_Tac_Toe
+﻿namespace Game_Hub
 {
 	class Match
 	{
