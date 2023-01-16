@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Game_Hub
 {
-	class Board
+	class TicTacToeBoard
 	{
 		private char[,] board;
 
-		public Board()
+		public TicTacToeBoard()
 		{
 			board = new char[,]
 			{

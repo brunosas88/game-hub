@@ -149,7 +149,7 @@ namespace Game_Hub
 					gamePlayers[0].PlayOrder = 1;
 					gamePlayers[1].PlayOrder = 2;
 
-					PlayGame(gamePlayers[0], gamePlayers[1]);
+					PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
 
 					Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
 					playAgain = Display.FormatConsoleReadLine();
@@ -214,9 +214,9 @@ namespace Game_Hub
 			Display.BackToMenu();
 		}
 
-		static void PlayGame(Player playerOne, Player playerTwo)
+		static void PlayTicTacToeGame(Player playerOne, Player playerTwo)
 		{
-			Board gameBoard = new Board();
+			TicTacToeBoard gameBoard = new TicTacToeBoard();
 			Player currentPlayer = playerOne; 
 
 			int position, winner;
@@ -228,7 +228,7 @@ namespace Game_Hub
 			do
 			{				
 				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Nome}, insira posição: "));
-				position = CheckMove(moveCount);
+				position = CheckTicTacToeMove(moveCount);
 				if (position != 0)
 				{
 					gameBoard.UpdateBoard(position, currentPlayer.PlayOrder);
@@ -238,7 +238,7 @@ namespace Game_Hub
 				Display.GameInterface("Jogar!");
 				Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
 				gameBoard.PrintBoard();
-				winner = CheckWinner(gameBoard.GetBoard());
+				winner = CheckTicTacToeWinner(gameBoard.GetBoard());
 				if (!moveCount.Contains(false))
 					position = 0;
 			} while (position != 0 && winner == 0);
@@ -263,7 +263,12 @@ namespace Game_Hub
 			}
 		}
 
-		static int CheckWinner(char[,] board)
+		static void PlayChessGame ()
+		{
+
+		}
+
+		static int CheckTicTacToeWinner(char[,] board)
 		{
 			char result = ' ';
 
@@ -286,7 +291,7 @@ namespace Game_Hub
 			return result == 'X' ? 1 : result == 'O' ? 2 : 0;
 		}
 
-		static int CheckMove(bool[] moveCount)
+		static int CheckTicTacToeMove(bool[] moveCount)
 		{
 			int position;
 			bool validEndtry;
