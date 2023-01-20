@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game_Hub.Model.Enums;
 
 namespace Game_Hub.Controller
 {
@@ -14,6 +15,8 @@ namespace Game_Hub.Controller
 		public static void PlayTicTacToeGame(Player playerOne, Player playerTwo)
 		{
 			TicTacToeBoard gameBoard = new TicTacToeBoard();
+			MatchEvaluation matchInfoP1 = playerOne.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.JOGO_DA_VELHA),
+							matchInfoP2 = playerTwo.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.JOGO_DA_VELHA);
 			Player currentPlayer = playerOne;
 
 			int position, winner;
@@ -42,20 +45,20 @@ namespace Game_Hub.Controller
 
 			if (winner == 1)
 			{
-				playerOne.Victories++;
-				playerTwo.Defeats++;
+				matchInfoP1.Victories++;
+				matchInfoP2.Defeats++;
 				Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
 			}
 			else if (winner == 2)
 			{
-				playerOne.Defeats++;
-				playerTwo.Victories++;
+				matchInfoP1.Defeats++;
+				matchInfoP2.Victories++;
 				Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
 			}
 			else
 			{
-				playerOne.Draws++;
-				playerTwo.Draws++;
+				matchInfoP1.Draws++;
+				matchInfoP2.Draws++;
 				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
 			}
 		}

@@ -1,4 +1,5 @@
 ﻿using Game_Hub.Model;
+using Game_Hub.Model.Enums;
 using Game_Hub.Util;
 using Microsoft.VisualBasic.FileIO;
 using System;
@@ -133,15 +134,19 @@ namespace Game_Hub.View
             return indexToColorize;
         }
 
-        public static void ShowPlayerDetails(Player player)
+        public static void ShowPlayerDetails(Player player, GameTitle game)
         {
-            Console.WriteLine();
+            MatchEvaluation matchInfo = player.MatchesInfo.FirstOrDefault(match => match.Game == game);
+			Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine(AlignMessage($"{player.Nome}"));
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(AlignMessage($"{player.Points} Ponto(s) | {player.Victories} Vitória(s) | {player.Defeats} Derrota(s) | {player.Draws} Empate(s)"));
+            Console.WriteLine(AlignMessage($"{matchInfo.Points} Ponto(s) | " +
+                                           $"{matchInfo.Victories} Vitória(s) | " +
+                                           $"{matchInfo.Defeats} Derrota(s) | " +
+                                           $"{matchInfo.Draws} Empate(s)"));
             Console.ForegroundColor = ConsoleColor.White;
         }
 

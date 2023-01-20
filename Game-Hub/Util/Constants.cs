@@ -19,7 +19,7 @@ namespace Game_Hub.Util
         public const string MainMenuEndGameOption = "Sair do Jogo";
         public const string LogMenuFirstOption = "Ranking";
         public const string LogMenuSecondOption = "Histórico de Partidas";
-        public const string LogMenuBackToMainOption = "Voltar ao Menu Principal";
+        public const string MenuBackToOption = "Voltar ao Menu Anterior";
         public static readonly Dictionary<string, int> LineReference = new Dictionary<string, int>
         {
             {"8", 0}, {"7", 1}, {"6", 2}, {"5", 3}, {"4", 4}, {"3", 5}, {"2", 6}, {"1", 7}

@@ -1,37 +1,34 @@
-﻿namespace Game_Hub.Model
+﻿using Game_Hub.Model.Enums;
+using System.Text.Json.Serialization;
+
+namespace Game_Hub.Model
 {
     class Match
-    {
-        private string playerOne;
-        private string playerTwo;
-        private int playerOneVictories;
-        private int playerTwoVictories;
-        private int draws;
-        private int matchesPlayed;
+    {		
+		public GameTitle Game { get; set; }
+		public string PlayerOne { get; set; }
+		public string PlayerTwo { get; set; }
+		public int PlayerOneVictories { get; set; }
+		public int PlayerTwoVictories { get; set; }
+		public int Draws { get; set; }
+		public int MatchesPlayed { get { return PlayerOneVictories + PlayerTwoVictories + Draws; } }
 
-        public Match() { }
+		[JsonConstructor]
+		public Match(GameTitle game, string playerOne, string playerTwo, int playerOneVictories, int playerTwoVictories, int draws) : this(game, playerOne, playerTwo)
+		{
+			PlayerOneVictories = playerOneVictories;
+			PlayerTwoVictories = playerTwoVictories;
+			Draws = draws;
+		}
 
-        public Match(string playerOneName, string playerTwoName)
+		public Match(GameTitle game, string playerOneName, string playerTwoName)
         {
-            playerOne = playerOneName;
-            playerTwo = playerTwoName;
-            playerOneVictories = 0;
-            playerTwoVictories = 0;
-            draws = 0;
-            matchesPlayed = 0;
+            Game = game;
+			PlayerOne = playerOneName;
+			PlayerTwo = playerTwoName;
+			PlayerOneVictories = 0;
+			PlayerTwoVictories = 0;
+			Draws = 0;
         }
-
-        public string PlayerOne { get => playerOne; set => playerOne = value; }
-        public string PlayerTwo { get => playerTwo; set => playerTwo = value; }
-        public int PlayerOneVictories { get => playerOneVictories; set => playerOneVictories = value; }
-        public int PlayerTwoVictories { get => playerTwoVictories; set => playerTwoVictories = value; }
-        public int Draws { get => draws; set => draws = value; }
-        public int MatchesPlayed { get => matchesPlayed; set => matchesPlayed = value; }
-        public void CalculateMatchesPlayed()
-        {
-            matchesPlayed = playerOneVictories + playerTwoVictories + draws;
-        }
-
-
-    }
+	}
 }

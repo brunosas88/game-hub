@@ -1,37 +1,36 @@
-﻿using System;
+﻿using Game_Hub.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Game_Hub.Model
 {
     class Player
     {
-        private string nome;
-        private int playOrder;
-        private int points;
-        private int victories;
-        private int draws;
-        private int defeats;
+		public string Nome { get; set; }
+		public int PlayOrder { get; set; }
+		public string Password { get; private set; }
+		public List<MatchEvaluation> MatchesInfo { get; set; }
 
-        public Player() { }
+		[JsonConstructor]
+		public Player(string nome, int playOrder, string password, List<MatchEvaluation> matchesInfo)
+		{
+			Nome = nome;
+			PlayOrder = playOrder;
+			Password = password;
+			MatchesInfo = matchesInfo;
+		}
 
-        public Player(string nome)
-        {
-            this.nome = nome;
-            playOrder = 0;
-            points = 0;
-            victories = 0;
-            draws = 0;
-            defeats = 0;
-        }
-
-        public string Nome { get => nome; set => nome = value; }
-        public int PlayOrder { get => playOrder; set => playOrder = value; }
-        public int Points { get => points; set => points = value; }
-        public int Victories { get => victories; set => victories = value; }
-        public int Draws { get => draws; set => draws = value; }
-        public int Defeats { get => defeats; set => defeats = value; }
-    }
+		public Player(string nome, string password)
+		{
+			Nome = nome;			
+			Password = password;
+			MatchesInfo = new List<MatchEvaluation>();
+			foreach (GameTitle game in Enum.GetValues(typeof(GameTitle)) )			
+				MatchesInfo.Add(new MatchEvaluation(game));
+		}
+	}
 }
