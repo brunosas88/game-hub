@@ -21,6 +21,7 @@ namespace Game_Hub
 			Console.BackgroundColor = ConsoleColor.DarkCyan;
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize);
+			//Console.CursorVisible = false;
 
 			List<Player> players = new List<Player>();
 			List<Match> matches = new List<Match>();
@@ -65,7 +66,7 @@ namespace Game_Hub
 			name = Display.FormatConsoleReadLine();
 
 			Console.WriteLine(Display.AlignMessage("Insira senha do novo jogador: "));
-			password = Display.FormatConsoleReadLine();
+			password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 
 			isRegistered = players.Exists(player => player.Nome == name);
 
@@ -147,7 +148,7 @@ namespace Game_Hub
 
 		static Player GetPlayer(List<Player> players, int playerOrder)
 		{
-			string findPlayerAgain = "n";
+			string findPlayerAgain = "n", name, password;
 			Player? player;
 
 			do
@@ -155,9 +156,9 @@ namespace Game_Hub
 				Display.GameInterface("Selecionar Jogadores");
 
 				Console.WriteLine(Display.AlignMessage($"Nome do Jogador {playerOrder}: "));
-				string dataEntry = Display.FormatConsoleReadLine();
+				name = Display.FormatConsoleReadLine();
 
-				player = players.Find(player => player.Nome == dataEntry);
+				player = players.Find(player => player.Nome == name);
 
 				if (player == null)
 				{
@@ -166,12 +167,23 @@ namespace Game_Hub
 					findPlayerAgain = Display.FormatConsoleReadLine();
 				}
 				else
-					return player;
+				{
+					Console.WriteLine(Display.AlignMessage("Favor inserir a senha: "));
+					password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
+					if (player.Password == password)					
+						return player;
+					else
+					{
+						Display.ShowWarning("Senha inválida");
+						Console.WriteLine(Display.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
+						findPlayerAgain = Display.FormatConsoleReadLine();
+					}					
+				}
+					
 
 			} while (findPlayerAgain == "s" || findPlayerAgain == "S");
 
-			return player;
-			
+			return player;			
 		}
 
 		static bool SelectGameOptions(List<Player> players, List<Match> matches)
@@ -262,6 +274,7 @@ namespace Game_Hub
 			gamePlayers[0] = GetPlayer(players, 1);
 
 			gamePlayers[1] = GetPlayer(players, 2);
+
 			return gamePlayers;
 		}
 

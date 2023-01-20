@@ -13,12 +13,15 @@ namespace Game_Hub.View
 {
     class Display
     {
-        public static string FormatConsoleReadLine()
+        public static string FormatConsoleReadLine(bool encrypt = false)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             string dataEntry = string.Empty;
             ConsoleKey dataEntryKey;
-            do
+            int screenCenterValue = (Constants.WindowWidthSize / 2) - 1;
+			Console.CursorLeft = screenCenterValue;
+
+			do
             {
                 ConsoleKeyInfo dataEntryKeyInfo = Console.ReadKey(intercept: true);
                 dataEntryKey = dataEntryKeyInfo.Key;
@@ -27,14 +30,14 @@ namespace Game_Hub.View
                 {
                     dataEntry = dataEntry[0..^1];
                     Console.CursorLeft = 0;
-                    Console.Write(AlignMessage(dataEntry));
-                }
+                    Console.Write(encrypt ? AlignMessage(new string('*', dataEntry.Length)) : AlignMessage(dataEntry));
+				}
                 else if (!char.IsControl(dataEntryKeyInfo.KeyChar))
                 {
                     dataEntry += dataEntryKeyInfo.KeyChar;
                     Console.CursorLeft = 0;
-                    Console.Write(AlignMessage(dataEntry));
-                }
+					Console.Write(encrypt ? AlignMessage(new string('*', dataEntry.Length)) : AlignMessage(dataEntry));
+				}
             } while (dataEntryKey != ConsoleKey.Enter);
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.White;
