@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game_Hub.Util;
 
 namespace Game_Hub.Model.Chess
 {
-	public class Pawn : IChessPiece
+    public class Pawn : IChessPiece
 	{
 		public string Id { get; set; }
 		public ChessPieceColor Color { get; set; }

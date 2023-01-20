@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game_Hub.Controller;
+using Game_Hub.Model;
+using Game_Hub.Model.Enums;
+using Game_Hub.Model.TicTacToe;
+using Game_Hub.Util;
+using Game_Hub.View;
 
 namespace Game_Hub
 {
-	class Game
+    class Game
 	{
 
 		static void Main(string[] args)
@@ -36,7 +42,7 @@ namespace Game_Hub
 						RegisterPlayer(players);
 						break;
 					case 2:
-						GetLogs(players, matches);					
+						ChooseGame(players, matches);					
 						break;
 					case 3:
 						SelectGameOptions(players, matches);
@@ -49,11 +55,53 @@ namespace Game_Hub
 			} while (option != 0);
 		}
 
-		private static void GetLogs(List<Player> players, List<Match> matches)
+		static void RegisterPlayer(List<Player> players)
+		{
+			string name, password, warning = "Jogador já Cadastrado!";
+			bool isRegistered;
+			Display.GameInterface("Cadastro de Novo Jogador");
+
+			Console.WriteLine(Display.AlignMessage("Insira nome do novo jogador: "));
+			name = Display.FormatConsoleReadLine();
+
+			Console.WriteLine(Display.AlignMessage("Insira senha do novo jogador: "));
+			password = Display.FormatConsoleReadLine();
+
+			isRegistered = players.Exists(player => player.Nome == name);
+
+			if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(name) && !isRegistered)
+			{
+				players.Add(new Player(name, password));
+				warning = $"Jogador {name} Cadastrado com Sucesso!";
+			}
+			else if (string.IsNullOrEmpty(name))
+				warning = "Entrada Inválida! Operação Não Realizada!";
+			else
+				warning += " Operação Não Realizada!";
+
+			Display.ShowWarning(warning);
+
+			Display.BackToMenu();
+		}
+
+		private static void ChooseGame(List<Player> players, List<Match> matches)
+		{
+			int option;
+
+			do
+			{
+				option = GetGameTitle();
+				if (option != 0)				
+					GetLogs(players, matches, (GameTitle)option);
+				
+			} while (option != 0);
+		}
+
+		private static void GetLogs(List<Player> players, List<Match> matches, GameTitle game)
 		{
 			int option;
 			List<string> menuOptions = new List<string>
-			{Constants.LogMenuBackToMainOption, Constants.LogMenuFirstOption, Constants.LogMenuSecondOption};
+			{Constants.MenuBackToOption, Constants.LogMenuFirstOption, Constants.LogMenuSecondOption};
 
 			do
 			{
@@ -62,10 +110,10 @@ namespace Game_Hub
 				switch (option)
 				{
 					case 1:
-						GetPlayersLogs(players);
+						GetPlayersLogs(players, game);
 						break;
 					case 2:
-						GetMatchesLogs(matches);						
+						GetMatchesLogs(matches, game);						
 						break;
 					case 0:
 						break;
@@ -73,36 +121,38 @@ namespace Game_Hub
 			} while (option != 0);
 		}
 
-		private static void GetMatchesLogs(List<Match> matches)
+		private static void GetMatchesLogs(List<Match> matches, GameTitle choosenGame)
 		{
 			Display.GameInterface("Histórico de Partidas");
 
-			foreach (Match match in matches)
+			List<Match> choosenGameMatches = matches.FindAll(match => match.Game == choosenGame);
+
+			foreach (Match match in choosenGameMatches)
 				Display.ShowMatchesDetails(match);				
 
 			Display.BackToMenu();
 		}
 
-		private static void GetPlayersLogs(List<Player> players)
+		private static void GetPlayersLogs(List<Player> players, GameTitle game)
 		{
 			Display.GameInterface("Ranking");
-			List<Player> ranking = players.OrderBy(player => player.Points).ToList();
+			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points ).ToList();
 			ranking.Reverse();
 
 			foreach (Player player in ranking)
-				Display.ShowPlayerDetails(player);		
+				Display.ShowPlayerDetails(player, game);		
 			
 			Display.BackToMenu();
 		}
 
-		static Player SelectPlayer(List<Player> players, int playerOrder)
+		static Player GetPlayer(List<Player> players, int playerOrder)
 		{
 			string findPlayerAgain = "n";
 			Player? player;
 
 			do
 			{
-				Display.GameInterface("Configurações Iniciais do Jogo");
+				Display.GameInterface("Selecionar Jogadores");
 
 				Console.WriteLine(Display.AlignMessage($"Nome do Jogador {playerOrder}: "));
 				string dataEntry = Display.FormatConsoleReadLine();
@@ -126,197 +176,115 @@ namespace Game_Hub
 
 		static bool SelectGameOptions(List<Player> players, List<Match> matches)
 		{
-			Display.GameInterface("Configurações Iniciais do Jogo");
+			Player[] gamePlayers = SelectPlayers(players);
 
-			Player?[] gamePlayers = new Player[2];
-
-			gamePlayers[0] = SelectPlayer(players, 1);
-
-			gamePlayers[1] = SelectPlayer(players, 2);
-
-			if (gamePlayers.Contains(null))			
+			if (gamePlayers.Contains(null))
 				Display.ShowWarning("Jogador(es) Inválidos!");
 			else
 			{
-				string playAgain;
-				int playerOnePreMatchWins = gamePlayers[0].Victories;
-				int playerTwoPreMatchWins = gamePlayers[1].Victories;
-				int playerOnepreMatchDraws = gamePlayers[0].Draws;
-				Match currentMatch = new Match(gamePlayers[0].Nome, gamePlayers[1].Nome);
-				do
+				int option = GetGameTitle();
+
+				switch (option)
 				{
-					Display.GameInterface("Jogar!");
-					gamePlayers[0].PlayOrder = 1;
-					gamePlayers[1].PlayOrder = 2;
-
-					PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
-
-					Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
-					playAgain = Display.FormatConsoleReadLine();
-
-					if (playAgain == "s" || playAgain == "S")					
-						Array.Reverse(gamePlayers);				
-
-				} while (playAgain == "s" || playAgain == "S");
-
-				CalculateMatchResults(gamePlayers, matches,	playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
+					case 1:
+						break;
+					case 2:
+						InitializeTicTacToeGame(matches, gamePlayers);
+						break;
+					case 0:
+						break;
+				}
 			}
-
 			Display.BackToMenu();
 
 			return true;
 		}
 
-		private static void CalculateMatchResults(Player[] gamePlayers, List<Match> matches, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
+		private static int GetGameTitle()
 		{
-			int playerOnePoints;
-			int playerTwoPoints;
+			List<string> gameTitles = new List<string>
+			{
+				Constants.MenuBackToOption
+			};
 
-			Match currentMatch = new Match(gamePlayers[0].Nome, gamePlayers[1].Nome);
-			currentMatch.PlayerOneVictories = gamePlayers[0].Victories - playerOnePreMatchWins;
-			currentMatch.PlayerTwoVictories = gamePlayers[1].Victories - playerTwoPreMatchWins;
-			currentMatch.Draws = gamePlayers[0].Draws - playerOnepreMatchDraws;
-			currentMatch.CalculateMatchesPlayed();
+			gameTitles.AddRange(Enum.GetValues(typeof(GameTitle))
+										  .Cast<GameTitle>()
+										  .Select(title => title.ToString().Replace("_", " "))
+										  .ToList());
+			
+			
+			return Display.ShowMenu(gameTitles, "Escolha do Jogo");
+		}
+
+		private static void InitializeTicTacToeGame(List<Match> matches, Player[] gamePlayers)
+		{
+			string playAgain;
+
+			CheckGameInfo(gamePlayers, GameTitle.JOGO_DA_VELHA);
+			int playerOnePreMatchWins = gamePlayers[0].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Victories,
+			    playerTwoPreMatchWins = gamePlayers[1].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Victories,
+			    playerOnepreMatchDraws = gamePlayers[0].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Draws;
+
+			do
+			{
+				Display.GameInterface("Jogar!");
+				gamePlayers[0].PlayOrder = 1;
+				gamePlayers[1].PlayOrder = 2;
+
+				TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
+
+				Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
+				playAgain = Display.FormatConsoleReadLine();
+
+				if (playAgain == "s" || playAgain == "S")
+					Array.Reverse(gamePlayers);
+
+			} while (playAgain == "s" || playAgain == "S");
+
+			CalculateMatchResults(GameTitle.JOGO_DA_VELHA, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
+		}
+
+		private static void CheckGameInfo(Player[] gamePlayers, GameTitle game)
+		{
+			foreach (Player player in gamePlayers)
+			{
+				if (!player.MatchesInfo.Exists(match => match.Game == game))				
+					player.MatchesInfo.Add(new MatchEvaluation(game));				
+			}
+		}
+
+		private static Player[] SelectPlayers(List<Player> players)
+		{
+			Display.GameInterface("Configurações Iniciais do Jogo");
+
+			Player?[] gamePlayers = new Player[2];
+
+			gamePlayers[0] = GetPlayer(players, 1);
+
+			gamePlayers[1] = GetPlayer(players, 2);
+			return gamePlayers;
+		}
+
+		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, List<Match> matches, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
+		{
+
+			Match currentMatch = new Match(game, gamePlayers[0].Nome, gamePlayers[1].Nome);
+			MatchEvaluation matchInfoP1 = gamePlayers[0].MatchesInfo.FirstOrDefault(match => match.Game == game),
+							matchInfoP2 = gamePlayers[1].MatchesInfo.FirstOrDefault(match => match.Game == game);
+
+			currentMatch.PlayerOneVictories = matchInfoP1.Victories - playerOnePreMatchWins;
+			currentMatch.PlayerTwoVictories = matchInfoP2.Victories - playerTwoPreMatchWins;
+			currentMatch.Draws = matchInfoP1.Draws - playerOnepreMatchDraws;
+			
 			matches.Add(currentMatch);
 
-			gamePlayers[0].Points += currentMatch.PlayerOneVictories * Constants.VictoryPoints +
-									currentMatch.PlayerTwoVictories * Constants.DefeatPoints +
-									currentMatch.Draws * Constants.DrawPoints;
+			matchInfoP1.Points += currentMatch.PlayerOneVictories * Constants.VictoryPoints +
+								  currentMatch.PlayerTwoVictories * Constants.DefeatPoints +
+								  currentMatch.Draws * Constants.DrawPoints;
 
-			gamePlayers[1].Points += currentMatch.PlayerTwoVictories * Constants.VictoryPoints +
-									currentMatch.PlayerOneVictories * Constants.DefeatPoints +
-									currentMatch.Draws * Constants.DrawPoints;
-		}
-
-		static void RegisterPlayer(List<Player> players)
-		{
-			string name, cpf, password, warning = "Jogador já Cadastrado!";
-			bool isRegistered;
-			Display.GameInterface("Cadastro de Novo Jogador");	
-
-			Console.WriteLine(Display.AlignMessage("Insira nome do novo jogador: "));
-			name = Display.FormatConsoleReadLine();
-
-			isRegistered = players.Exists(player => player.Nome == name);
-
-			if (!string.IsNullOrEmpty(name) && !isRegistered)
-			{
-				players.Add(new Player(name));				
-				warning = $"Jogador {name} Cadastrado com Sucesso!";
-			}
-			else if (string.IsNullOrEmpty(name))
-				warning = "Entrada Inválida! Operação Não Realizada!";
-			else
-				warning += " Operação Não Realizada!";
-
-			Display.ShowWarning(warning);
-
-			Display.BackToMenu();
-		}
-
-		static void PlayTicTacToeGame(Player playerOne, Player playerTwo)
-		{
-			TicTacToeBoard gameBoard = new TicTacToeBoard();
-			Player currentPlayer = playerOne; 
-
-			int position, winner;
-			bool playerOneTurn = true;
-			bool[] moveCount = new bool[9];
-			Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
-			gameBoard.PrintBoard();
-			
-			do
-			{				
-				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Nome}, insira posição: "));
-				position = CheckTicTacToeMove(moveCount);
-				if (position != 0)
-				{
-					gameBoard.UpdateBoard(position, currentPlayer.PlayOrder);
-					playerOneTurn = !playerOneTurn;
-					currentPlayer = playerOneTurn ? playerOne : playerTwo;				
-				}
-				Display.GameInterface("Jogar!");
-				Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
-				gameBoard.PrintBoard();
-				winner = CheckTicTacToeWinner(gameBoard.GetBoard());
-				if (!moveCount.Contains(false))
-					position = 0;
-			} while (position != 0 && winner == 0);
-			
-			if (winner == 1)
-			{
-				playerOne.Victories++;
-				playerTwo.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
-			}
-			else if (winner == 2)
-			{
-				playerOne.Defeats++;
-				playerTwo.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
-			}
-			else
-			{
-				playerOne.Draws++;
-				playerTwo.Draws++;
-				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
-			}
-		}
-
-		static void PlayChessGame ()
-		{
-
-		}
-
-		static int CheckTicTacToeWinner(char[,] board)
-		{
-			char result = ' ';
-
-			for (int row = 0; row < board.GetLength(0); row++) // verifica linhas
-			{ 
-				if ((board[row,0] == board[row,2] && board[row, 0] == board[row, 4]))				
-					result = board[row, 0];
-				
-				for (int column = 0; column < board.GetLength(1); column += 2) // verifica colunas
-				{ 
-					if ((board[0, column] == board[1, column] && board[0, column] == board[2, column]))					
-						result = board[0, column];					
-				}
-			}
-
-			if ( (board[0, 0] == board[1, 2] && board[0, 0] == board[2, 4]) || // verifica diagonais
-				 (board[0, 4] == board[1, 2] && board[0, 4] == board[2, 0])	)
-			{ result = board[1, 2]; }
-			
-			return result == 'X' ? 1 : result == 'O' ? 2 : 0;
-		}
-
-		static int CheckTicTacToeMove(bool[] moveCount)
-		{
-			int position;
-			bool validEndtry;
-			do
-			{
-				validEndtry = int.TryParse(Display.FormatConsoleReadLine(), out position);
-
-				if (position > 0 && position < 10)
-				{
-					if (!moveCount[position - 1])
-					{
-						moveCount[position - 1] = true;
-						break;
-					}
-					else
-						Console.WriteLine(Display.AlignMessage("Posição já ocupada, escolha outra: "));
-				}
-				else if (validEndtry && position == 0) // sair do jogo
-					break;
-				else
-					Console.WriteLine(Display.AlignMessage("Insira uma posição válida (1 - 9): "));					
-				
-			} while (true);
-
-			return position;
+			matchInfoP2.Points += currentMatch.PlayerTwoVictories * Constants.VictoryPoints +
+								  currentMatch.PlayerOneVictories * Constants.DefeatPoints +
+								  currentMatch.Draws * Constants.DrawPoints;
 		}
 	}
 }
