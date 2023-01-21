@@ -240,8 +240,7 @@ namespace Game_Hub
 					case GameTitle.JOGO_DA_VELHA:
 						TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
 						break;
-				}
-				
+				}				
 
 				Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
 				playAgain = Display.FormatConsoleReadLine();
@@ -251,7 +250,7 @@ namespace Game_Hub
 
 			} while (playAgain == "s" || playAgain == "S");
 
-			CalculateMatchResults(GameTitle.JOGO_DA_VELHA, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
+			CalculateMatchResults(game, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
 		}
 
 		private static Player[] SelectPlayers(List<Player> players)

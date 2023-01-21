@@ -29,41 +29,130 @@ namespace Game_Hub.Controller
 			// iniciar posições
 			List<ChessPiece> inGamePieces = InitializeChessPieces();
 			List<ChessPieceInfo> infoGamePieces = UpdateInfoChessPieces(inGamePieces);
-			List<string> blackCapturedPieces = new List<string>();
-			List<string> whiteCapturedPieces = new List<string>();
-			List<string> possibleMovesWithoutExistentPieces = new List<string>();
+			List<string> blackCapturedPieces = new(), whiteCapturedPieces = new(), possibleMoves = new(),
+						 blackPiecesPositions = new(), whitePiecesPositions = new();
+						 
+			string playerEntry, newPosition,
+				   choosePieceMessage = "Escolha peça a ser jogada indicando coluna e linha (Ex.: a1)",
+				   choosePositionToMoveMessage = "Escolha posição para mover a peça indicando coluna e linha (Ex.: a1)";
 
-
-			// jogo 
+			ChessPiece whiteKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.WHITE));
+			ChessPiece blackKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.BLACK));
+			ChessPiece pieceToMove;
+			
 			do
 			{
+				blackPiecesPositions = infoGamePieces.FindAll(pieces => pieces.Color == ChessPieceColor.BLACK)
+										  .Select(piece => piece.Position).ToList();
+				whitePiecesPositions = infoGamePieces.FindAll(pieces => pieces.Color == ChessPieceColor.WHITE)
+														  .Select(piece => piece.Position).ToList();
+
 				Display.GameInterface("Jogar!");
-				Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
-				possibleMovesWithoutExistentPieces.Clear();
+				Display.ShowWarning("Insira E para pedir declaração de empate", false);
+				Display.ShowWarning("Insira 0 para escolher outra peça", false);
+				Display.ShowWarning("Insira D para desistir da partida", false);
+
 				// mostrar tabuleiro com peças
 				newChessBoard.UpdateBoard(infoGamePieces);
 				Display.PrintChessBoard(newChessBoard.Board);
 				Display.PrintCapturedChessPieces(blackCapturedPieces, whiteCapturedPieces);
 				// pegar posição do usuario
-				Console.Write("\nInsira posição: ");
-				string originalPosition = Console.ReadLine();
-				// encontrar peça na posição
-				var pieceToMove = inGamePieces.Find(piece => piece.Position == originalPosition);
-				// encontrar os possíveis movimentos
-				List<string> allPossibleMoves = pieceToMove.Move(originalPosition, infoGamePieces);
-				// mostrar possiveis movimentos
-				Console.Write("\nMovimentos Possiveis: [");
-				foreach (var item in allPossibleMoves)
-					Console.Write($" -{item}- ");
-				Console.Write("]\n");
-				// escolher entre os movimentos possiveis
-				string newPosition = Console.ReadLine();
-				// verificar se houve captura e mudar posição da peça
-				infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, originalPosition, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
+				
+				if (playerOneTurn)
+				{
+					Console.WriteLine(Display.AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerOne.Nome}"));
+					playerEntry = GetPosition(whitePiecesPositions, choosePieceMessage);
+				}
+				else
+				{
+					Console.WriteLine(Display.AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerTwo.Nome}"));
+					playerEntry = GetPosition(blackPiecesPositions, choosePieceMessage);
+				}
+					
 
-			} while (true);
+				if (ValidatePlayerEntry(playerEntry))
+				{
+					pieceToMove = inGamePieces.Find(piece => piece.Position == playerEntry);
+
+					possibleMoves = pieceToMove.Move(playerEntry, infoGamePieces);
+
+					Display.PrintPossibleMoves(possibleMoves);
+
+					newPosition = GetPosition(possibleMoves, choosePositionToMoveMessage);
+
+					if (ValidatePlayerEntry(newPosition))
+					{
+						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, playerEntry, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
+						playerOneTurn = !playerOneTurn;
+					}
+					playerEntry = newPosition;
+				}
+				else if (playerEntry.ToLower() == "e")
+				{
+					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate? S - SIM / Qualquer outra tecla - NÃO", false);
+					playerEntry = Console.ReadLine();
+				}
+
+
+			} while (playerEntry.ToLower() != "d" && !blackKing.IsCaptured && !whiteKing.IsCaptured && playerEntry.ToLower() != "s");
+
+			if (blackKing.IsCaptured)
+			{
+				matchInfoP1.Victories++;
+				matchInfoP2.Defeats++;
+				Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
+			}
+			else if (whiteKing.IsCaptured)
+			{
+				matchInfoP1.Defeats++;
+				matchInfoP2.Victories++;
+				Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
+			}
+			else if (playerEntry == "s")
+			{
+				matchInfoP1.Draws++;
+				matchInfoP2.Draws++;
+				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
+			}
+			else
+			{
+				if (playerOneTurn)
+				{
+					matchInfoP1.Defeats++;
+					matchInfoP2.Victories++;
+					Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
+				}
+				else
+				{
+					matchInfoP1.Victories++;
+					matchInfoP2.Defeats++;
+					Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
+				}
+			}
 		}
 
+		private static bool ValidatePlayerEntry(string playerEntry)
+		{
+			return playerEntry != "0" && playerEntry.ToLower() != "d" && playerEntry.ToLower() != "e";
+		}
+
+		private static string GetPosition(List<string> positions, string message)
+		{
+			string? position;
+			bool showWarning = false;
+			
+			do
+			{
+				if (showWarning) Console.WriteLine(Display.AlignMessage("Insira uma posição válida"));					
+
+				Console.WriteLine(Display.AlignMessage(message));
+				position = Display.FormatConsoleReadLine();
+				showWarning = true;
+
+			} while ( !positions.Contains(position) && ValidatePlayerEntry(position));
+
+			return position;
+		}
 
 
 		private static List<ChessPieceInfo> UpdateGamePieces(List<ChessPiece> inGamePieces, ChessPiece pieceToMove, string originalPosition, string? newPosition, ref List<string> blackCapturedPieces, ref List<string> whiteCapturedPieces)

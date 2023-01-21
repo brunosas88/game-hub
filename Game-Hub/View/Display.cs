@@ -45,16 +45,16 @@ namespace Game_Hub.View
             return dataEntry;
         }
 
-        public static void ShowWarning(string message)
+        public static void ShowWarning(string message, bool skipLine = true)
         {
-            Console.WriteLine();
+            if (skipLine) Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.Write(AlignMessage(message));
+            Console.WriteLine(AlignMessage(message));
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine();
-        }
+			if (skipLine) Console.WriteLine();
+		}
 
         public static void BackToMenu()
         {
@@ -212,7 +212,7 @@ namespace Game_Hub.View
 		{
             string output;
            
-			output = ($"Peças Pretas Capturadas: [");
+			output = ("Peças Pretas Capturadas: [");
 			foreach (var item in blackCapturedPieces)
 				output += ($" {item} ");
 			output += ("]");
@@ -225,6 +225,17 @@ namespace Game_Hub.View
 				output += ($" {item} ");
 			output += ("]");
 			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine(AlignMessage(output));
+		}
+
+		public static void PrintPossibleMoves(List<string> possibleMoves)
+		{
+			string output;
+			output = ("Movimentos Possiveis: [");
+			foreach (var item in possibleMoves)
+				output += ($" {item} ");
+			output += ("]");
+			Console.WriteLine();
 			Console.WriteLine(AlignMessage(output));
 		}
 	}
