@@ -50,7 +50,7 @@ namespace Game_Hub.View
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.Write(AlignMessage(message) + "\n");
+            Console.Write(AlignMessage(message));
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine();
@@ -169,43 +169,63 @@ namespace Game_Hub.View
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-		public static void PrintBoard(ChessPieceInfo[,] board)
+		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard)
 		{
-			Console.Clear();
 			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 			char[] rowReference = { '8', '7', '6', '5', '4', '3', '2', '1' };
 			List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Gray, ConsoleColor.DarkGray };
 			bool isDarkerColor = true;
 			Console.WriteLine();
+            int padLeftToCenterBoard = 20;
 
-			Console.Write("   ");
+			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
 			foreach (char reference in colReference)
 				Console.Write(" " + reference + " ");
 
 			Console.WriteLine();
 
-			for (int row = 0; row < board.GetLength(0); row++)
+			for (int row = 0; row < chessBoard.GetLength(0); row++)
 			{
-				Console.Write(" " + rowReference[row] + " ");
+				Console.Write(" ".PadLeft(padLeftToCenterBoard) + rowReference[row] + " ");
 
-				for (int col = 0; col < board.GetLength(1); col++)
+				for (int col = 0; col < chessBoard.GetLength(1); col++)
 				{
 					Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
 
 					Console.Write(" ");
-					Console.ForegroundColor = board[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
-					Console.Write(board[row, col].Sprite);
+					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
+					Console.Write(chessBoard[row, col].Sprite);
 					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
 					Console.Write(" ");
 
 					isDarkerColor = !isDarkerColor;
 				}
-				Console.BackgroundColor = ConsoleColor.Black;
+				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 				colors.Reverse();
 				Console.WriteLine();
 			}
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+		}
+
+		public static void PrintCapturedChessPieces(List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
+		{
+            string output;
+           
+			output = ($"Peças Pretas Capturadas: [");
+			foreach (var item in blackCapturedPieces)
+				output += ($" {item} ");
+			output += ("]");
+			Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine();
+			Console.WriteLine(AlignMessage(output));
+
+			output = ($"Peças Brancas Capturadas: [");
+			foreach (var item in whiteCapturedPieces)
+				output += ($" {item} ");
+			output += ("]");
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine(AlignMessage(output));
 		}
 	}
 }

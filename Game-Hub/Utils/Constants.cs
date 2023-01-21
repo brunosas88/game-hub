@@ -35,8 +35,8 @@ namespace Game_Hub.Utils
 		public const string PAWN_SPRITE = "P";
 		public const string QUEEN_SPRITE = "Q";
 		public const string ROOK_SPRITE = "R";
-		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.Gray;
-		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.Black;
+		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
+		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
 
 	}
 
