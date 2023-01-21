@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game_Hub.Model.Chess
+namespace Game_Hub.Model.Enums
 {
-	public enum ChessPieceColor
-	{
-		WHITE, BLACK
-	}
+    public enum ChessPieceColor
+    {
+        WHITE, BLACK
+    }
 }

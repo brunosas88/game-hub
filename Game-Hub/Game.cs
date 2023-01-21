@@ -7,7 +7,7 @@ using Game_Hub.Controller;
 using Game_Hub.Model;
 using Game_Hub.Model.Enums;
 using Game_Hub.Model.TicTacToe;
-using Game_Hub.Util;
+using Game_Hub.Utils;
 using Game_Hub.View;
 
 namespace Game_Hub
@@ -29,7 +29,7 @@ namespace Game_Hub
 			{Constants.MainMenuEndGameOption, Constants.MainMenuFirstOption, Constants.MainMenuSecondOption,
 			Constants.MainMenuThirdption};
 
-			Utils.ReadJSON(ref players, ref matches);
+			Utils.Util.ReadJSON(ref players, ref matches);
 
 			int option;
 
@@ -50,7 +50,7 @@ namespace Game_Hub
 						break;
 					case 0:
 						Display.GameInterface("Game Over!");
-						Utils.WriteJSON(players, matches);
+						Utils.Util.WriteJSON(players, matches);
 						break;		
 				}
 			} while (option != 0);
@@ -181,7 +181,7 @@ namespace Game_Hub
 				}
 					
 
-			} while (findPlayerAgain == "s" || findPlayerAgain == "S");
+			} while (findPlayerAgain.ToLower() == "s" );
 
 			return player;			
 		}
