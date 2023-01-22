@@ -7,7 +7,7 @@ using Game_Hub.Controller;
 using Game_Hub.Model;
 using Game_Hub.Model.Enums;
 using Game_Hub.Model.TicTacToe;
-using Game_Hub.Util;
+using Game_Hub.Utils;
 using Game_Hub.View;
 
 namespace Game_Hub
@@ -17,11 +17,10 @@ namespace Game_Hub
 
 		static void Main(string[] args)
 		{
-			Console.OutputEncoding = System.Text.Encoding.Unicode;
-			Console.BackgroundColor = ConsoleColor.DarkCyan;
-			Console.ForegroundColor = ConsoleColor.White;
-			Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize);
-			//Console.CursorVisible = false;
+			Console.OutputEncoding = Encoding.Unicode;
+			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
+			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+			Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize);			
 
 			List<Player> players = new List<Player>();
 			List<Match> matches = new List<Match>();
@@ -29,7 +28,7 @@ namespace Game_Hub
 			{Constants.MainMenuEndGameOption, Constants.MainMenuFirstOption, Constants.MainMenuSecondOption,
 			Constants.MainMenuThirdption};
 
-			Utils.ReadJSON(ref players, ref matches);
+			Util.ReadJSON(ref players, ref matches);
 
 			int option;
 
@@ -43,14 +42,14 @@ namespace Game_Hub
 						RegisterPlayer(players);
 						break;
 					case 2:
-						ChooseGame(players, matches);					
+						ChooseLogGame(players, matches);					
 						break;
 					case 3:
 						SelectGameOptions(players, matches);
 						break;
 					case 0:
 						Display.GameInterface("Game Over!");
-						Utils.WriteJSON(players, matches);
+						Util.WriteJSON(players, matches);
 						break;		
 				}
 			} while (option != 0);
@@ -68,9 +67,9 @@ namespace Game_Hub
 			Console.WriteLine(Display.AlignMessage("Insira senha do novo jogador: "));
 			password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 
-			isRegistered = players.Exists(player => player.Nome == name);
+			isRegistered = players.Exists(player => player.Name == name);
 
-			if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(name) && !isRegistered)
+			if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(password) && !isRegistered)
 			{
 				players.Add(new Player(name, password));
 				warning = $"Jogador {name} Cadastrado com Sucesso!";
@@ -85,7 +84,7 @@ namespace Game_Hub
 			Display.BackToMenu();
 		}
 
-		private static void ChooseGame(List<Player> players, List<Match> matches)
+		private static void ChooseLogGame(List<Player> players, List<Match> matches)
 		{
 			int option;
 
@@ -158,7 +157,7 @@ namespace Game_Hub
 				Console.WriteLine(Display.AlignMessage($"Nome do Jogador {playerOrder}: "));
 				name = Display.FormatConsoleReadLine();
 
-				player = players.Find(player => player.Nome == name);
+				player = players.Find(player => player.Name == name);
 
 				if (player == null)
 				{
@@ -181,7 +180,7 @@ namespace Game_Hub
 				}
 					
 
-			} while (findPlayerAgain == "s" || findPlayerAgain == "S");
+			} while (findPlayerAgain.ToLower() == "s" );
 
 			return player;			
 		}
@@ -196,16 +195,7 @@ namespace Game_Hub
 			{
 				int option = GetGameTitle();
 
-				switch (option)
-				{
-					case 1:
-						break;
-					case 2:
-						InitializeTicTacToeGame(matches, gamePlayers);
-						break;
-					case 0:
-						break;
-				}
+				InitializeGame(matches, gamePlayers, (GameTitle)option);
 			}
 			Display.BackToMenu();
 
@@ -228,14 +218,13 @@ namespace Game_Hub
 			return Display.ShowMenu(gameTitles, "Escolha do Jogo");
 		}
 
-		private static void InitializeTicTacToeGame(List<Match> matches, Player[] gamePlayers)
+		private static void InitializeGame(List<Match> matches, Player[] gamePlayers, GameTitle game)
 		{
 			string playAgain;
-
-			CheckGameInfo(gamePlayers, GameTitle.JOGO_DA_VELHA);
-			int playerOnePreMatchWins = gamePlayers[0].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Victories,
-			    playerTwoPreMatchWins = gamePlayers[1].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Victories,
-			    playerOnepreMatchDraws = gamePlayers[0].MatchesInfo.Find(match => match.Game == GameTitle.JOGO_DA_VELHA).Draws;
+		
+			int playerOnePreMatchWins = gamePlayers[0].MatchesInfo.Find(match => match.Game == game).Victories,
+			    playerTwoPreMatchWins = gamePlayers[1].MatchesInfo.Find(match => match.Game == game).Victories,
+			    playerOnepreMatchDraws = gamePlayers[0].MatchesInfo.Find(match => match.Game == game).Draws;
 
 			do
 			{
@@ -243,7 +232,15 @@ namespace Game_Hub
 				gamePlayers[0].PlayOrder = 1;
 				gamePlayers[1].PlayOrder = 2;
 
-				TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
+				switch (game)
+				{
+					case GameTitle.XADREZ:
+						ChessGame.PlayChessGame(gamePlayers[0], gamePlayers[1]);
+						break;
+					case GameTitle.JOGO_DA_VELHA:
+						TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
+						break;
+				}				
 
 				Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
 				playAgain = Display.FormatConsoleReadLine();
@@ -253,16 +250,7 @@ namespace Game_Hub
 
 			} while (playAgain == "s" || playAgain == "S");
 
-			CalculateMatchResults(GameTitle.JOGO_DA_VELHA, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
-		}
-
-		private static void CheckGameInfo(Player[] gamePlayers, GameTitle game)
-		{
-			foreach (Player player in gamePlayers)
-			{
-				if (!player.MatchesInfo.Exists(match => match.Game == game))				
-					player.MatchesInfo.Add(new MatchEvaluation(game));				
-			}
+			CalculateMatchResults(game, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
 		}
 
 		private static Player[] SelectPlayers(List<Player> players)
@@ -281,7 +269,7 @@ namespace Game_Hub
 		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, List<Match> matches, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
 		{
 
-			Match currentMatch = new Match(game, gamePlayers[0].Nome, gamePlayers[1].Nome);
+			Match currentMatch = new Match(game, gamePlayers[0].Name, gamePlayers[1].Name);
 			MatchEvaluation matchInfoP1 = gamePlayers[0].MatchesInfo.FirstOrDefault(match => match.Game == game),
 							matchInfoP2 = gamePlayers[1].MatchesInfo.FirstOrDefault(match => match.Game == game);
 

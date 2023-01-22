@@ -1,6 +1,7 @@
 ﻿using Game_Hub.Model;
+using Game_Hub.Model.Chess;
 using Game_Hub.Model.Enums;
-using Game_Hub.Util;
+using Game_Hub.Utils;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -44,16 +45,16 @@ namespace Game_Hub.View
             return dataEntry;
         }
 
-        public static void ShowWarning(string message)
+        public static void ShowWarning(string message, bool skipLine = true)
         {
-            Console.WriteLine();
+            if (skipLine) Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.Write(AlignMessage(message) + "\n");
+            Console.WriteLine(AlignMessage(message));
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine();
-        }
+			if (skipLine) Console.WriteLine();
+		}
 
         public static void BackToMenu()
         {
@@ -143,7 +144,7 @@ namespace Game_Hub.View
 			Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine(AlignMessage($"{player.Nome}"));
+            Console.WriteLine(AlignMessage($"{player.Name}"));
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(AlignMessage($"{matchInfo.Points} Ponto(s) | " +
@@ -167,5 +168,103 @@ namespace Game_Hub.View
             if (match.MatchesPlayed > 1) Console.WriteLine(AlignMessage($"Partidas Consecutivas: {match.MatchesPlayed}"));
             Console.ForegroundColor = ConsoleColor.White;
         }
-    }
+
+		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard, List<string>? possibleMoves = null)
+		{
+			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+			char[] rowReference = { '8', '7', '6', '5', '4', '3', '2', '1' };
+			List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Gray, ConsoleColor.DarkGray };
+			List<ConsoleColor> highlightColors = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.DarkRed };
+			bool isDarkerColor = true, isHighlightPositions = false;
+			int padLeftToCenterBoard = 19;
+			int[,] highlightPositions = new int[1,1]; 
+			int[] realPosition;
+
+			if ((possibleMoves != null) && possibleMoves.Count > 0)
+            {
+				highlightPositions = new int[possibleMoves.Count, 2];
+                isHighlightPositions = true;
+
+				for (int row = 0; row < highlightPositions.GetLength(0); row++)
+				{
+					realPosition = Util.GetRealPosition(possibleMoves[row]);
+
+					for (int col = 0; col < highlightPositions.GetLength(1); col++)
+					{
+						highlightPositions[row, col] = realPosition[col];
+					}
+				}
+			}
+
+			Console.WriteLine();
+			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
+			foreach (char reference in colReference)
+				Console.Write(" " + reference + " ");
+
+			Console.WriteLine();
+
+			for (int row = 0; row < chessBoard.GetLength(0); row++)
+			{
+				Console.Write(" ".PadLeft(padLeftToCenterBoard) + rowReference[row] + " ");
+
+				for (int col = 0; col < chessBoard.GetLength(1); col++)
+				{
+                    if (isHighlightPositions)
+                    {
+                        for (int i = 0; i < highlightPositions.GetLength(0); i++)
+                        {
+                            if (row == highlightPositions[i, 0] && col == highlightPositions[i, 1])
+                            {
+								Console.BackgroundColor = isDarkerColor ? highlightColors[0] : highlightColors[1];
+								break;
+							}
+							else
+								Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
+						}
+                    }                           
+					else
+                        Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
+
+					Console.Write(" ");
+					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
+					Console.Write(chessBoard[row, col].Sprite);
+					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+					Console.Write(" ");
+
+					isDarkerColor = !isDarkerColor;
+				}
+				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
+				colors.Reverse();
+                highlightColors.Reverse();
+				Console.WriteLine();
+			}
+
+			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
+			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+		}
+
+		public static void PrintChessMatchInfo(List<string> blackCapturedPieces, List<string> whiteCapturedPieces, bool playerOneTurn, string playerName)
+		{
+            string output;
+           
+			output = ("Peças Pretas Capturadas: [");
+			foreach (var item in blackCapturedPieces)
+				output += ($" {item} ");
+			output += ("]");
+			Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine();
+			Console.WriteLine(AlignMessage(output));
+
+			output = ($"Peças Brancas Capturadas: [");
+			foreach (var item in whiteCapturedPieces)
+				output += ($" {item} ");
+			output += ("]");
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine(AlignMessage(output));
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine(AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerName}"));
+			Console.ForegroundColor = ConsoleColor.White;
+		}
+	}
 }

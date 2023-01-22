@@ -6,9 +6,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Game_Hub.Model;
 
-namespace Game_Hub.Util
+namespace Game_Hub.Utils
 {
-    class Utils
+    class Util
     {
 
         public static void WriteJSON(List<Player> players, List<Match> matches)
@@ -53,22 +53,22 @@ namespace Game_Hub.Util
             }
         }
 
-        public static int[] GetRealPosition(string position)
-        {
-            int line = Constants.LineReference[position[0].ToString()];
-            int column = Constants.ColumnReference[position[1].ToString()];
-            int[] realPosition = { line, column };
-            return realPosition;
-        }
+		public static int[] GetRealPosition(string position)
+		{
+			int row = Constants.LINE_REFERENCE[position[1].ToString()];
+			int column = Constants.COLUMN_REFERENCE[position[0].ToString()];
+			int[] realPosition = { row, column };
+			return realPosition;
+		}
 
-        public static string NominatePosition(int line, int column)
-        {
-            string nominatedLine = Constants.LineReference.First(entries => entries.Value == line).Key;
-            string nominatedColumn = Constants.ColumnReference.First(entries => entries.Value == column).Key;
+		public static string NominatePosition(int line, int column)
+		{
+			string nominatedLine = Constants.LINE_REFERENCE.First(entries => entries.Value == line).Key;
+			string nominatedColumn = Constants.COLUMN_REFERENCE.First(entries => entries.Value == column).Key;
 
-            return nominatedLine + nominatedColumn;
-        }
+			return nominatedColumn + nominatedLine;
+		}
 
 
-    }
+	}
 }

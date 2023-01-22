@@ -1,25 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Game_Hub.Util;
+using Game_Hub.Model.Enums;
+using Game_Hub.Utils;
 
 namespace Game_Hub.Model.Chess
 {
-    public class Pawn : IChessPiece
+    public class Pawn : ChessPiece
 	{
-		public string Id { get; set; }
-		public ChessPieceColor Color { get; set; }
-		public string Position { get; set; }
-		public string Sprite { get; set; }
-		public bool IsCaptured { get; set; }
 		public bool IsPromoted { get; set; }
-		public bool IsFirstMove { get; private set; }
+		public bool IsFirstMove { get; set; }
 
-		public Pawn(string id, ChessPieceColor color, string position, string sprite)
+		public Pawn(ChessPieceColor color, string position, string sprite)
 		{
-			Id = id;
 			Color = color;
 			Position = position;
 			Sprite = sprite;
@@ -29,28 +25,71 @@ namespace Game_Hub.Model.Chess
 			Color = color;
 		}
 
-		public List<string> Move(string currentPosition)
+		public override List<string> Move(string currentPosition, List<ChessPieceInfo> infoGamePieces)
 		{
-			int[] realPosition = Utils.GetRealPosition(currentPosition);
+			int[] realPosition = Util.GetRealPosition(currentPosition);
 			int currentLinePosition = realPosition[0], currentColumnPosition = realPosition[1], newLinePosition, newColumnPosition;
+			string newPosition, leftDiagonalPosition, rightDiagonalPosition;
+			bool isMovimentPossible;
 			List<string> possibleMoves = new List<string>();
-			string possiblePosition;
 
-			if (IsFirstMove)
+			newLinePosition = Color == ChessPieceColor.WHITE ?
+			currentLinePosition - 1 :
+			currentLinePosition + 1;
+			newPosition = Util.NominatePosition(newLinePosition, currentColumnPosition);
+			isMovimentPossible = CheckMove(infoGamePieces, newPosition, possibleMoves);
+
+			if (IsFirstMove && isMovimentPossible)
 			{
-				newColumnPosition = Color.Equals(ChessPieceColor.WHITE) ? 
-					currentColumnPosition - 2 :
-					currentColumnPosition + 2;
-				possibleMoves.Add(Utils.NominatePosition(currentLinePosition,newColumnPosition));
+				newLinePosition = Color == ChessPieceColor.WHITE ?
+					currentLinePosition - 2 :
+					currentLinePosition + 2;
+				newPosition = Util.NominatePosition(newLinePosition, currentColumnPosition);
+				CheckMove(infoGamePieces, newPosition, possibleMoves);
 				IsFirstMove = false;
 			}
 
-			newColumnPosition = Color.Equals(ChessPieceColor.WHITE) ?
-					currentColumnPosition - 1 :
-					currentColumnPosition + 1;
-			possibleMoves.Add(Utils.NominatePosition(currentLinePosition, newColumnPosition));
+			CheckAtack(infoGamePieces, currentLinePosition, currentColumnPosition, possibleMoves);
 
 			return possibleMoves;
+		}
+
+		private void CheckAtack(List<ChessPieceInfo> infoGamePieces, int currentLinePosition, int currentColumnPosition, List<string> possibleMoves)
+		{
+			string leftDiagonalPosition;
+			string rightDiagonalPosition;
+
+			if (currentColumnPosition > 0 && currentColumnPosition < 8)
+			{
+
+				leftDiagonalPosition = Color == ChessPieceColor.WHITE ?
+					Util.NominatePosition(currentLinePosition - 1, currentColumnPosition - 1) :
+					Util.NominatePosition(currentLinePosition + 1, currentColumnPosition - 1);
+
+				if ((infoGamePieces.Exists(piece => piece.Position == leftDiagonalPosition && piece.Color != this.Color)))
+					possibleMoves.Add(leftDiagonalPosition);
+			}
+
+			if (currentColumnPosition >= 0 && currentColumnPosition < 7)
+			{
+				rightDiagonalPosition = Color == ChessPieceColor.WHITE ?
+					Util.NominatePosition(currentLinePosition - 1, currentColumnPosition + 1) :
+					Util.NominatePosition(currentLinePosition + 1, currentColumnPosition + 1);
+				if ((infoGamePieces.Exists(piece => piece.Position == rightDiagonalPosition && piece.Color != this.Color)))
+					possibleMoves.Add(rightDiagonalPosition);
+			}
+		}
+
+		private bool CheckMove(List<ChessPieceInfo> infoGamePieces, string newPosition, List<string> possibleMoves)
+		{
+
+			if (!infoGamePieces.Exists(piece => piece.Position == newPosition))
+			{
+				possibleMoves.Add(newPosition);
+				return true;
+			}
+			else
+				return false;
 		}
 
 
