@@ -67,7 +67,7 @@ namespace Game_Hub
 			Console.WriteLine(Display.AlignMessage("Insira senha do novo jogador: "));
 			password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 
-			isRegistered = players.Exists(player => player.Nome == name);
+			isRegistered = players.Exists(player => player.Name == name);
 
 			if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(password) && !isRegistered)
 			{
@@ -157,7 +157,7 @@ namespace Game_Hub
 				Console.WriteLine(Display.AlignMessage($"Nome do Jogador {playerOrder}: "));
 				name = Display.FormatConsoleReadLine();
 
-				player = players.Find(player => player.Nome == name);
+				player = players.Find(player => player.Name == name);
 
 				if (player == null)
 				{
@@ -269,7 +269,7 @@ namespace Game_Hub
 		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, List<Match> matches, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
 		{
 
-			Match currentMatch = new Match(game, gamePlayers[0].Nome, gamePlayers[1].Nome);
+			Match currentMatch = new Match(game, gamePlayers[0].Name, gamePlayers[1].Name);
 			MatchEvaluation matchInfoP1 = gamePlayers[0].MatchesInfo.FirstOrDefault(match => match.Game == game),
 							matchInfoP2 = gamePlayers[1].MatchesInfo.FirstOrDefault(match => match.Game == game);
 

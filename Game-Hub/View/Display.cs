@@ -144,7 +144,7 @@ namespace Game_Hub.View
 			Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine(AlignMessage($"{player.Nome}"));
+            Console.WriteLine(AlignMessage($"{player.Name}"));
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(AlignMessage($"{matchInfo.Points} Ponto(s) | " +
@@ -169,15 +169,34 @@ namespace Game_Hub.View
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard)
+		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard, List<string>? possibleMoves = null)
 		{
 			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 			char[] rowReference = { '8', '7', '6', '5', '4', '3', '2', '1' };
 			List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Gray, ConsoleColor.DarkGray };
-			bool isDarkerColor = true;
-			Console.WriteLine();
-            int padLeftToCenterBoard = 20;
+			List<ConsoleColor> highlightColors = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.DarkRed };
+			bool isDarkerColor = true, isHighlightPositions = false;
+			int padLeftToCenterBoard = 19;
+			int[,] highlightPositions = new int[1,1]; 
+			int[] realPosition;
 
+			if ((possibleMoves != null) && possibleMoves.Count > 0)
+            {
+				highlightPositions = new int[possibleMoves.Count, 2];
+                isHighlightPositions = true;
+
+				for (int row = 0; row < highlightPositions.GetLength(0); row++)
+				{
+					realPosition = Util.GetRealPosition(possibleMoves[row]);
+
+					for (int col = 0; col < highlightPositions.GetLength(1); col++)
+					{
+						highlightPositions[row, col] = realPosition[col];
+					}
+				}
+			}
+
+			Console.WriteLine();
 			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
 			foreach (char reference in colReference)
 				Console.Write(" " + reference + " ");
@@ -190,7 +209,21 @@ namespace Game_Hub.View
 
 				for (int col = 0; col < chessBoard.GetLength(1); col++)
 				{
-					Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
+                    if (isHighlightPositions)
+                    {
+                        for (int i = 0; i < highlightPositions.GetLength(0); i++)
+                        {
+                            if (row == highlightPositions[i, 0] && col == highlightPositions[i, 1])
+                            {
+								Console.BackgroundColor = isDarkerColor ? highlightColors[0] : highlightColors[1];
+								break;
+							}
+							else
+								Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
+						}
+                    }                           
+					else
+                        Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
 
 					Console.Write(" ");
 					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
@@ -202,13 +235,15 @@ namespace Game_Hub.View
 				}
 				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 				colors.Reverse();
+                highlightColors.Reverse();
 				Console.WriteLine();
 			}
+
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
 		}
 
-		public static void PrintCapturedChessPieces(List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
+		public static void PrintChessMatchInfo(List<string> blackCapturedPieces, List<string> whiteCapturedPieces, bool playerOneTurn, string playerName)
 		{
             string output;
            
@@ -226,17 +261,10 @@ namespace Game_Hub.View
 			output += ("]");
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine(AlignMessage(output));
-		}
 
-		public static void PrintPossibleMoves(List<string> possibleMoves)
-		{
-			string output;
-			output = ("Movimentos Possiveis: [");
-			foreach (var item in possibleMoves)
-				output += ($" {item} ");
-			output += ("]");
-			Console.WriteLine();
-			Console.WriteLine(AlignMessage(output));
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine(AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerName}"));
+			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
 }

@@ -15,31 +15,27 @@ namespace Game_Hub.Controller
 	{
 		public static void PlayChessGame(Player playerOne, Player playerTwo)
 		{
-			
+
 			ChessBoard newChessBoard = new ChessBoard();
 			MatchEvaluation matchInfoP1 = playerOne.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.XADREZ),
 							matchInfoP2 = playerTwo.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.XADREZ);
 			Player currentPlayer = playerOne;
-			int position, winner;
 
 			bool playerOneTurn = true;
 
-			Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
-
-			// iniciar posições
 			List<ChessPiece> inGamePieces = InitializeChessPieces();
 			List<ChessPieceInfo> infoGamePieces = UpdateInfoChessPieces(inGamePieces);
 			List<string> blackCapturedPieces = new(), whiteCapturedPieces = new(), possibleMoves = new(),
 						 blackPiecesPositions = new(), whitePiecesPositions = new();
-						 
+
 			string playerEntry, newPosition,
-				   choosePieceMessage = "Escolha peça a ser jogada indicando coluna e linha (Ex.: a1)",
-				   choosePositionToMoveMessage = "Escolha posição para mover a peça indicando coluna e linha (Ex.: a1)";
+				   choosePieceMessage = "Insira posição da peça (Ex.: a2)",
+				   choosePositionToMoveMessage = Constants.MESSAGE_CHOOSE_POSITION_TO_MOVE;
 
 			ChessPiece whiteKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.WHITE));
 			ChessPiece blackKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.BLACK));
 			ChessPiece pieceToMove;
-			
+
 			do
 			{
 				blackPiecesPositions = infoGamePieces.FindAll(pieces => pieces.Color == ChessPieceColor.BLACK)
@@ -47,28 +43,13 @@ namespace Game_Hub.Controller
 				whitePiecesPositions = infoGamePieces.FindAll(pieces => pieces.Color == ChessPieceColor.WHITE)
 														  .Select(piece => piece.Position).ToList();
 
-				Display.GameInterface("Jogar!");
-				Display.ShowWarning("Insira E para pedir declaração de empate", false);
-				Display.ShowWarning("Insira 0 para escolher outra peça", false);
-				Display.ShowWarning("Insira D para desistir da partida", false);
-
-				// mostrar tabuleiro com peças
 				newChessBoard.UpdateBoard(infoGamePieces);
-				Display.PrintChessBoard(newChessBoard.Board);
-				Display.PrintCapturedChessPieces(blackCapturedPieces, whiteCapturedPieces);
-				// pegar posição do usuario
-				
-				if (playerOneTurn)
-				{
-					Console.WriteLine(Display.AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerOne.Nome}"));
-					playerEntry = GetPosition(whitePiecesPositions, choosePieceMessage);
-				}
-				else
-				{
-					Console.WriteLine(Display.AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerTwo.Nome}"));
-					playerEntry = GetPosition(blackPiecesPositions, choosePieceMessage);
-				}
-					
+
+				ShowChessGame(newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
+
+				playerEntry = playerOneTurn ? 
+					GetPosition(whitePiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces) : 
+					GetPosition(blackPiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
 				if (ValidatePlayerEntry(playerEntry))
 				{
@@ -76,37 +57,58 @@ namespace Game_Hub.Controller
 
 					possibleMoves = pieceToMove.Move(playerEntry, infoGamePieces);
 
-					Display.PrintPossibleMoves(possibleMoves);
-
-					newPosition = GetPosition(possibleMoves, choosePositionToMoveMessage);
+					newPosition = GetPosition(possibleMoves, choosePositionToMoveMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
 					if (ValidatePlayerEntry(newPosition))
 					{
 						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, playerEntry, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
 						playerOneTurn = !playerOneTurn;
+						currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					}
+
+					if (newPosition == "0" && pieceToMove is Pawn pawn)					
+						pawn.IsFirstMove = true;				
+
 					playerEntry = newPosition;
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate? S - SIM / Qualquer outra tecla - NÃO", false);
+					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?");
+					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
 					playerEntry = Console.ReadLine();
 				}
 
 
 			} while (playerEntry.ToLower() != "d" && !blackKing.IsCaptured && !whiteKing.IsCaptured && playerEntry.ToLower() != "s");
 
+			CalculateResults(playerOne, playerTwo, matchInfoP1, matchInfoP2, playerOneTurn, playerEntry, whiteKing, blackKing);
+		}
+
+		private static void ShowChessGame(ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, List<string>? possibleMoves = null)
+		{
+			Display.GameInterface("Jogar!");
+			Display.ShowWarning("Insira E para pedir declaração de empate", false);
+			Display.ShowWarning("Insira 0 para escolher outra peça", false);
+			Display.ShowWarning("Insira D para desistir da partida", false);
+
+			Display.PrintChessBoard(board, possibleMoves);
+
+			Display.PrintChessMatchInfo(blackCapturedPieces, whiteCapturedPieces, playerOneTurn, playerName);
+		}
+
+		private static void CalculateResults(Player playerOne, Player playerTwo, MatchEvaluation matchInfoP1, MatchEvaluation matchInfoP2, bool playerOneTurn, string playerEntry, ChessPiece whiteKing, ChessPiece blackKing)
+		{
 			if (blackKing.IsCaptured)
 			{
 				matchInfoP1.Victories++;
 				matchInfoP2.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
+				Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
 			}
 			else if (whiteKing.IsCaptured)
 			{
 				matchInfoP1.Defeats++;
 				matchInfoP2.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
+				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
 			else if (playerEntry == "s")
 			{
@@ -120,13 +122,13 @@ namespace Game_Hub.Controller
 				{
 					matchInfoP1.Defeats++;
 					matchInfoP2.Victories++;
-					Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
+					Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 				}
 				else
 				{
 					matchInfoP1.Victories++;
 					matchInfoP2.Defeats++;
-					Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
+					Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
 				}
 			}
 		}
@@ -136,14 +138,21 @@ namespace Game_Hub.Controller
 			return playerEntry != "0" && playerEntry.ToLower() != "d" && playerEntry.ToLower() != "e";
 		}
 
-		private static string GetPosition(List<string> positions, string message)
+		private static string GetPosition(List<string> positions, string message, ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
 		{
 			string? position;
 			bool showWarning = false;
 			
 			do
 			{
-				if (showWarning) Console.WriteLine(Display.AlignMessage("Insira uma posição válida"));					
+				if (message == Constants.MESSAGE_CHOOSE_POSITION_TO_MOVE)
+					ShowChessGame(board, playerName, playerOneTurn, blackCapturedPieces, whiteCapturedPieces, positions);
+				else
+					ShowChessGame(board, playerName, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
+
+				if (showWarning)	
+					Display.ShowWarning("Insira uma posição válida", false);
+				
 
 				Console.WriteLine(Display.AlignMessage(message));
 				position = Display.FormatConsoleReadLine();

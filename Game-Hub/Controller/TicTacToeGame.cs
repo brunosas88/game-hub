@@ -27,7 +27,7 @@ namespace Game_Hub.Controller
 
 			do
 			{
-				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Nome}, insira posição: "));
+				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
 				position = CheckTicTacToeMove(moveCount);
 				if (position != 0)
 				{
@@ -47,13 +47,13 @@ namespace Game_Hub.Controller
 			{
 				matchInfoP1.Victories++;
 				matchInfoP2.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Nome} venceu!");
+				Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
 			}
 			else if (winner == 2)
 			{
 				matchInfoP1.Defeats++;
 				matchInfoP2.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Nome} venceu!");
+				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
 			else
 			{

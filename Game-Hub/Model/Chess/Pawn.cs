@@ -12,7 +12,7 @@ namespace Game_Hub.Model.Chess
     public class Pawn : ChessPiece
 	{
 		public bool IsPromoted { get; set; }
-		public bool IsFirstMove { get; private set; }
+		public bool IsFirstMove { get; set; }
 
 		public Pawn(ChessPieceColor color, string position, string sprite)
 		{
