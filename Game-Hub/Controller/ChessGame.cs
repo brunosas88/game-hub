@@ -66,7 +66,7 @@ namespace Game_Hub.Controller
 						currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					}
 
-					if (newPosition == "0" && pieceToMove is Pawn pawn)					
+					if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)					
 						pawn.IsFirstMove = true;				
 
 					playerEntry = newPosition;

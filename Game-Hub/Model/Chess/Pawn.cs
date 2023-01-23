@@ -13,11 +13,13 @@ namespace Game_Hub.Model.Chess
 	{
 		public bool IsPromoted { get; set; }
 		public bool IsFirstMove { get; set; }
+		public string OriginalPosition { get; set; }
 
 		public Pawn(ChessPieceColor color, string position, string sprite)
 		{
 			Color = color;
 			Position = position;
+			OriginalPosition = position;
 			Sprite = sprite;
 			IsCaptured = false;
 			IsPromoted = false;
