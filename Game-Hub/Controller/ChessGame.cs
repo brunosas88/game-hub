@@ -61,13 +61,15 @@ namespace Game_Hub.Controller
 
 					if (ValidatePlayerEntry(newPosition))
 					{
-						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, playerEntry, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
+						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
 						playerOneTurn = !playerOneTurn;
 						currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					}
 
 					if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)					
-						pawn.IsFirstMove = true;				
+						pawn.IsFirstMove = true;	
+					
+
 
 					playerEntry = newPosition;
 				}
@@ -163,11 +165,15 @@ namespace Game_Hub.Controller
 			return position;
 		}
 
-
-		private static List<ChessPieceInfo> UpdateGamePieces(List<ChessPiece> inGamePieces, ChessPiece pieceToMove, string originalPosition, string? newPosition, ref List<string> blackCapturedPieces, ref List<string> whiteCapturedPieces)
+		private static List<ChessPieceInfo> UpdateGamePieces(List<ChessPiece> inGamePieces, ChessPiece pieceToMove, string? newPosition, ref List<string> blackCapturedPieces, ref List<string> whiteCapturedPieces)
 		{
 			bool existsCapturedPiece = inGamePieces.Exists(capturedPiece => capturedPiece.Position == newPosition && capturedPiece.Color != pieceToMove.Color);
-
+			int option;
+			List<string> promotionPieces = new List<string>();
+			promotionPieces.AddRange(Enum.GetValues(typeof(PromotionChessPieces))
+										  .Cast<PromotionChessPieces>()
+										  .Select(title => title.ToString())
+										  .ToList());
 			if (existsCapturedPiece)
 			{
 				var pieceToRemove = inGamePieces.Find(piece => piece.Position == newPosition);
@@ -181,6 +187,32 @@ namespace Game_Hub.Controller
 			}
 
 			pieceToMove.Position = newPosition;
+
+			if ((pieceToMove is Pawn pawn) && pawn.IsPromoted)
+			{
+
+				option = Display.ShowMenu(promotionPieces, $"Promoção de Peão {pawn.Color} na casa {pawn.Position.ToUpper()}");
+				switch ((PromotionChessPieces)option)
+				{
+					case PromotionChessPieces.DAMA:
+						Queen queen = new Queen(pawn.Color, pawn.Position, Constants.QUEEN_SPRITE);
+						inGamePieces.Add(queen);
+						break;
+					case PromotionChessPieces.BISPO:
+						Bishop bishop = new Bishop(pawn.Color, pawn.Position, Constants.BISHOP_SPRITE);
+						inGamePieces.Add(bishop);
+						break;
+					case PromotionChessPieces.CAVALO:
+						Knight knight = new Knight(pawn.Color, pawn.Position, Constants.KNIGHT_SPRITE);
+						inGamePieces.Add(knight);
+						break;
+					case PromotionChessPieces.TORRE:
+						Rook rook = new Rook(pawn.Color, pawn.Position, Constants.ROOK_SPRITE);
+						inGamePieces.Add(rook);
+						break;
+				}
+				inGamePieces.Remove(pawn);
+			}
 
 			return UpdateInfoChessPieces(inGamePieces);
 		}

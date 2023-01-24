@@ -10,7 +10,25 @@ using Game_Hub.Utils;
 namespace Game_Hub.Model.Chess
 {
     public class Pawn : ChessPiece
-	{
+	{		
+		public override string Position
+		{
+			get => _position;
+			set
+			{
+				_position = value;
+				if (_position != "-1")
+				{
+					int[] realPosition = Util.GetRealPosition(value);
+					RealPositionRow = realPosition[0];
+					RealPositionCol = realPosition[1];
+				}
+				if (RealPositionRow == 0 && Color == ChessPieceColor.WHITE)				
+				IsPromoted = true;
+				else if (RealPositionRow == 7 && Color == ChessPieceColor.BLACK)
+				IsPromoted = true;
+			}
+		}
 		public bool IsPromoted { get; set; }
 		public bool IsFirstMove { get; set; }
 		public string OriginalPosition { get; set; }
