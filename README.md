@@ -36,6 +36,7 @@ Tabela de conteúdos
 ## Xadrez
   * As peças de xadrez seguem o padrão brasileiro de notação: R = rei, D = dama, C = cavalo, T = torre e B = bispo com a adição da letra P para representar o peão;
   * As posições são inseridas informando coluna seguido da linha, ex.: a1, b2, d5, h8;
+    * Primeiro se informa a posição da peça a ser movida e depois a posição para onde ela deve ir (indicada em destaque) respeitando os tipos de movimentações de cada peça; 
   * É permitido ao jogador se render durante seu turno inserindo a letra D (derrota) dando a vitória ao jogador oposto;
   * É permitido ao jogador tentar declarar empate, mas somente é concedido caso o jogador oposto também aceite ao ser perguntado pelo programa;
   * Ainda não estão implementadas as jogadas especiais *en passant* e roque;
