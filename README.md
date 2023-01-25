@@ -1,6 +1,6 @@
 # Game Hub
 
-O Game Hub emula uma central de jogos, onde jogadores podem se cadastrar e ter acesso aos jogos implementados na plataforma, jogo-da-velha e xadrez no momento, e analisar os resultados das partidas jogadas bem como os rankings com as pontuações dos jogadores de cada jogo.
+O Game Hub emula uma central de jogos, onde jogadores podem se cadastrar e ter acesso aos jogos implementados na plataforma (jogo-da-velha e xadrez no momento), e analisar os resultados das partidas bem como os rankings com as pontuações dos jogadores de cada jogo.
 
 Tabela de conteúdos
 =================
