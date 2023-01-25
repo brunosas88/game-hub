@@ -40,12 +40,14 @@ namespace Game_Hub
 				{
 					case 1:
 						RegisterPlayer(players);
+						Util.WriteJSON(players, matches);
 						break;
 					case 2:
 						ChooseLogGame(players, matches);					
 						break;
 					case 3:
 						SelectGameOptions(players, matches);
+						Util.WriteJSON(players, matches);
 						break;
 					case 0:
 						Display.GameInterface("Game Over!");
