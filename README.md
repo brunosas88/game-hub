@@ -40,7 +40,7 @@ Tabela de conteúdos
   * É permitido ao jogador se render durante seu turno inserindo a letra D (derrota) dando a vitória ao jogador oposto;
   * É permitido ao jogador tentar declarar empate, mas somente é concedido caso o jogador oposto também aceite ao ser perguntado pelo programa;
   * Ainda não estão implementadas as jogadas especiais *en passant* e roque;
-  * Ainda não está implmentada a opção de gerar o pgn da partida;
+  * Ainda não está implementada a opção de gerar o pgn da partida;
 ## Jogo-da-Velha
   * Jogadores são representados pelas letras X e O;
   * O jogador deve inserir uma posição de 1 a 9 que representa os espaços do tabuleiro, não é permitido inserir em um espaço já inserido e nem um valor fora
