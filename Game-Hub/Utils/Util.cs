@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -13,26 +14,37 @@ namespace Game_Hub.Utils
 
         public static void WriteJSON(List<Player> players, List<Match> matches)
         {
-            string filePath = @"C:\Users\Public\Documents\players.json";
+            string dataDirectory = CheckPathDirectory();
 
-            string jsonStringPlayers = JsonSerializer.Serialize(players, new JsonSerializerOptions() { WriteIndented = true });
+			string filePath = dataDirectory + Constants.PLAYER_SAVE_FILE;
+			string jsonStringPlayers = JsonSerializer.Serialize(players, new JsonSerializerOptions() { WriteIndented = true });
 
             using (StreamWriter outputFile = new StreamWriter(filePath))
                 outputFile.WriteLine(jsonStringPlayers);
 
-            filePath = @"C:\Users\Public\Documents\matches.json";
-
-            string jsonStringMatches = JsonSerializer.Serialize(matches, new JsonSerializerOptions() { WriteIndented = true });
+			filePath = dataDirectory + Constants.MATCH_SAVE_FILE;
+			string jsonStringMatches = JsonSerializer.Serialize(matches, new JsonSerializerOptions() { WriteIndented = true });
 
             using (StreamWriter outputFile = new StreamWriter(filePath))
                 outputFile.WriteLine(jsonStringMatches);
         }
 
-        public static void ReadJSON(ref List<Player> players, ref List<Match> matches)
-        {
-            string filePath = @"C:\Users\Public\Documents\players.json";
+		private static string CheckPathDirectory()
+		{
+			string workingDirectory = Environment.CurrentDirectory;
+			string dataDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName + @"\Data";
+			if (!Directory.Exists(dataDirectory))
+				Directory.CreateDirectory(dataDirectory);
 
-            if (File.Exists(filePath))
+			return dataDirectory;
+		}
+
+		public static void ReadJSON(ref List<Player> players, ref List<Match> matches)
+        {
+			string dataDirectory = CheckPathDirectory();
+
+			string filePath = dataDirectory + Constants.PLAYER_SAVE_FILE;
+			if (File.Exists(filePath))
             {
                 using (StreamReader inputFile = new StreamReader(filePath))
                 {
@@ -41,9 +53,8 @@ namespace Game_Hub.Utils
                 }
             }
 
-            filePath = @"C:\Users\Public\Documents\matches.json";
-
-            if (File.Exists(filePath))
+			filePath = dataDirectory + Constants.MATCH_SAVE_FILE;
+			if (File.Exists(filePath))
             {
                 using (StreamReader inputFile = new StreamReader(filePath))
                 {
