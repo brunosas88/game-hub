@@ -1,1 +1,32 @@
+# Game Hub
 
+O Game Hub emula uma central de jogos, onde jogadores podem se cadastrar e ter acesso aos jogos implementados na plataforma, jogo-da-velha e xadrez no momento, e analisar os resultados das partidas jogadas bem como os rankings com as pontuações dos jogadores de cada jogo.
+
+Tabela de conteúdos
+=================
+<!--ts-->
+   * [Sobre](#game-hub)
+   * [Instalação](#instalação)
+   * [Como usar](#como-usar)
+   * [Tecnologias](#tecnologias)
+<!--te-->
+
+# Instalação
+  * Instalar versão 6 do .NET;
+  * Instalar editor de código (Opcional);
+  * Clonar ou baixar código zipado deste repositório;
+  * Dentro da pasta Game-Hub iniciar o terminal e digitar o comando ```dotnet run```;
+## Observação
+  * O comando ``` Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize); ``` localizado na linha 23 da classe Game.cs funciona somente no Windows, o que significa que para rodar em outro sistema operacional ela deve ser comentada. Lembrando também que não utilizar o sistema Windows acarreta em alguns caracteres não serem reconhecidos e exibidos de forma incorreta e uma interface desalinhada.
+  
+# Como Usar
+  * Ao iniciar o programa será oferecida as opções de cadastro de jogador, verificar histórico de partidas, iniciar um jogo e sair do programa;
+    * Cadastro do Jogador: Cada jogador precisa se cadastrar com um nome de usuário e senha para ter acesso aos jogos;
+    * Histórico: O usuário pode verificar o histórico de partidas jogadas de cada tipo de jogo e o ranking respectivo;
+      * O ranking é contabilizado da seguinte maneira: 1 ponto para empate, 2 para vitória e -1 para derrota;
+    * Iniciar Jogo: O usuário precisa inserir um nome e senha já cadastrados para ter acesso aos jogos, iniciando pela definição de jogador 1
+    depois o jogador 2. Após isso decide-se o jogo a ser jogado, no caso, jogo-da-velha ou xadrez;
+  * As partidas e jogadores cadastrados são salvos automaticamente ao final das partidas e ao final do cadastro respectivamente;
+
+# Tecnologias
+  * Desenvolvido em C#, utilizando conceitos de classes, interface, herança, serialização e estruturação de projeto em MVC;
