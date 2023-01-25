@@ -52,4 +52,4 @@ desse intervalo é aceito.
         ```
 
 # Tecnologias
-  * Desenvolvido em C#, utilizando conceitos de classes, interface, herança, serialização e estruturação de projeto em MVC;
+  * Desenvolvido em C#, utilizando conceitos de classes, interface, herança, serialização(persistência de dados) e estruturação de projeto em MVC;
