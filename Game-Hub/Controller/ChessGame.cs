@@ -29,7 +29,7 @@ namespace Game_Hub.Controller
 						 blackPiecesPositions = new(), whitePiecesPositions = new();
 
 			string playerEntry, newPosition,
-				   choosePieceMessage = "Insira posição da peça (Ex.: a2)",
+				   choosePieceMessage = "Insira posição da peça:",
 				   choosePositionToMoveMessage = Constants.MESSAGE_CHOOSE_POSITION_TO_MOVE;
 
 			ChessPiece whiteKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.WHITE));
@@ -61,21 +61,23 @@ namespace Game_Hub.Controller
 
 					if (ValidatePlayerEntry(newPosition))
 					{
-						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, playerEntry, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
+						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
 						playerOneTurn = !playerOneTurn;
 						currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					}
 
-					if (newPosition == "0" && pieceToMove is Pawn pawn)					
-						pawn.IsFirstMove = true;				
+					if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)					
+						pawn.IsFirstMove = true;	
+					
+
 
 					playerEntry = newPosition;
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?");
+					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
 					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
-					playerEntry = Console.ReadLine();
+					playerEntry = Display.FormatConsoleReadLine();
 				}
 
 
@@ -87,6 +89,7 @@ namespace Game_Hub.Controller
 		private static void ShowChessGame(ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, List<string>? possibleMoves = null)
 		{
 			Display.GameInterface("Jogar!");
+			Display.ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
 			Display.ShowWarning("Insira E para pedir declaração de empate", false);
 			Display.ShowWarning("Insira 0 para escolher outra peça", false);
 			Display.ShowWarning("Insira D para desistir da partida", false);
@@ -163,15 +166,19 @@ namespace Game_Hub.Controller
 			return position;
 		}
 
-
-		private static List<ChessPieceInfo> UpdateGamePieces(List<ChessPiece> inGamePieces, ChessPiece pieceToMove, string originalPosition, string? newPosition, ref List<string> blackCapturedPieces, ref List<string> whiteCapturedPieces)
+		private static List<ChessPieceInfo> UpdateGamePieces(List<ChessPiece> inGamePieces, ChessPiece pieceToMove, string? newPosition, ref List<string> blackCapturedPieces, ref List<string> whiteCapturedPieces)
 		{
 			bool existsCapturedPiece = inGamePieces.Exists(capturedPiece => capturedPiece.Position == newPosition && capturedPiece.Color != pieceToMove.Color);
-
+			int option;
+			List<string> promotionPieces = new List<string>();
+			promotionPieces.AddRange(Enum.GetValues(typeof(PromotionChessPieces))
+										  .Cast<PromotionChessPieces>()
+										  .Select(title => title.ToString())
+										  .ToList());
 			if (existsCapturedPiece)
 			{
 				var pieceToRemove = inGamePieces.Find(piece => piece.Position == newPosition);
-				pieceToRemove.Position = "-1";
+				pieceToRemove.Position = Constants.OUT_OF_GAME;
 				pieceToRemove.IsCaptured = true;
 
 				if (pieceToRemove.Color != ChessPieceColor.WHITE)
@@ -181,6 +188,32 @@ namespace Game_Hub.Controller
 			}
 
 			pieceToMove.Position = newPosition;
+
+			if ((pieceToMove is Pawn pawn) && pawn.IsPromoted)
+			{
+
+				option = Display.ShowMenu(promotionPieces, $"Promoção de Peão {pawn.Color} na casa {pawn.Position.ToUpper()}");
+				switch ((PromotionChessPieces)option)
+				{
+					case PromotionChessPieces.DAMA:
+						Queen queen = new Queen(pawn.Color, pawn.Position, Constants.QUEEN_SPRITE);
+						inGamePieces.Add(queen);
+						break;
+					case PromotionChessPieces.BISPO:
+						Bishop bishop = new Bishop(pawn.Color, pawn.Position, Constants.BISHOP_SPRITE);
+						inGamePieces.Add(bishop);
+						break;
+					case PromotionChessPieces.CAVALO:
+						Knight knight = new Knight(pawn.Color, pawn.Position, Constants.KNIGHT_SPRITE);
+						inGamePieces.Add(knight);
+						break;
+					case PromotionChessPieces.TORRE:
+						Rook rook = new Rook(pawn.Color, pawn.Position, Constants.ROOK_SPRITE);
+						inGamePieces.Add(rook);
+						break;
+				}
+				inGamePieces.Remove(pawn);
+			}
 
 			return UpdateInfoChessPieces(inGamePieces);
 		}

@@ -20,13 +20,13 @@ namespace Game_Hub
 			Console.OutputEncoding = Encoding.Unicode;
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-			Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize);			
+			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);			
 
 			List<Player> players = new List<Player>();
 			List<Match> matches = new List<Match>();
 			List<string> mainMenuOptions = new List<string>
-			{Constants.MainMenuEndGameOption, Constants.MainMenuFirstOption, Constants.MainMenuSecondOption,
-			Constants.MainMenuThirdption};
+			{Constants.MAIN_MENU_END_GAME_OPTION, Constants.MAIN_MENU_FIRST_OPTION, Constants.MAIN_MENU_SECOND_OPTION,
+			Constants.MAIN_MENU_THIRD_OPTION};
 
 			Util.ReadJSON(ref players, ref matches);
 
@@ -40,12 +40,14 @@ namespace Game_Hub
 				{
 					case 1:
 						RegisterPlayer(players);
+						Util.WriteJSON(players, matches);
 						break;
 					case 2:
 						ChooseLogGame(players, matches);					
 						break;
 					case 3:
 						SelectGameOptions(players, matches);
+						Util.WriteJSON(players, matches);
 						break;
 					case 0:
 						Display.GameInterface("Game Over!");
@@ -101,7 +103,7 @@ namespace Game_Hub
 		{
 			int option;
 			List<string> menuOptions = new List<string>
-			{Constants.MenuBackToOption, Constants.LogMenuFirstOption, Constants.LogMenuSecondOption};
+			{Constants.MENU_BACK_TO_OPTION, Constants.LOG_MENU_FIRST_OPTION, Constants.LOG_MENU_SECOND_OPTION};
 
 			do
 			{
@@ -206,7 +208,7 @@ namespace Game_Hub
 		{
 			List<string> gameTitles = new List<string>
 			{
-				Constants.MenuBackToOption
+				Constants.MENU_BACK_TO_OPTION
 			};
 
 			gameTitles.AddRange(Enum.GetValues(typeof(GameTitle))
@@ -245,10 +247,10 @@ namespace Game_Hub
 				Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
 				playAgain = Display.FormatConsoleReadLine();
 
-				if (playAgain == "s" || playAgain == "S")
+				if (playAgain.ToLower() == "s")
 					Array.Reverse(gamePlayers);
 
-			} while (playAgain == "s" || playAgain == "S");
+			} while (playAgain.ToLower() == "s");
 
 			CalculateMatchResults(game, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
 		}
@@ -279,13 +281,13 @@ namespace Game_Hub
 			
 			matches.Add(currentMatch);
 
-			matchInfoP1.Points += currentMatch.PlayerOneVictories * Constants.VictoryPoints +
-								  currentMatch.PlayerTwoVictories * Constants.DefeatPoints +
-								  currentMatch.Draws * Constants.DrawPoints;
+			matchInfoP1.Points += currentMatch.PlayerOneVictories * Constants.VICTORY_POINTS +
+								  currentMatch.PlayerTwoVictories * Constants.DEFEAT_POINTS +
+								  currentMatch.Draws * Constants.DRAW_POINTS;
 
-			matchInfoP2.Points += currentMatch.PlayerTwoVictories * Constants.VictoryPoints +
-								  currentMatch.PlayerOneVictories * Constants.DefeatPoints +
-								  currentMatch.Draws * Constants.DrawPoints;
+			matchInfoP2.Points += currentMatch.PlayerTwoVictories * Constants.VICTORY_POINTS +
+								  currentMatch.PlayerOneVictories * Constants.DEFEAT_POINTS +
+								  currentMatch.Draws * Constants.DRAW_POINTS;
 		}
 	}
 }

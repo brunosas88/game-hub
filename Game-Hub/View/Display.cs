@@ -19,7 +19,7 @@ namespace Game_Hub.View
             Console.ForegroundColor = ConsoleColor.Yellow;
             string dataEntry = string.Empty;
             ConsoleKey dataEntryKey;
-            int screenCenterValue = (Constants.WindowWidthSize / 2) - 1;
+            int screenCenterValue = (Constants.WINDOW_WIDTH_SIZE / 2) - 1;
 			Console.CursorLeft = screenCenterValue;
 
 			do
@@ -63,7 +63,7 @@ namespace Game_Hub.View
             Console.ReadLine();
         }
 
-        public static string AlignMessage(string message, int blankSpace = Constants.WindowWidthSize)
+        public static string AlignMessage(string message, int blankSpace = Constants.WINDOW_WIDTH_SIZE)
         {
             return string.Format($"{{0,-{blankSpace}}}", string.Format("{0," + ((blankSpace + message.Length) / 2).ToString() + "}", message));
         }
@@ -71,8 +71,8 @@ namespace Game_Hub.View
         public static void GameInterface(string message)
         {
             Console.Clear();
-            int blankSpace = Constants.WindowWidthSize - 20;
-            int totalCharsHeader = Constants.WindowWidthSize;
+            int blankSpace = Constants.WINDOW_WIDTH_SIZE - 20;
+            int totalCharsHeader = Constants.WINDOW_WIDTH_SIZE;
             message = AlignMessage(message, blankSpace);
             string title = AlignMessage("Hub de Jogos", blankSpace);
             Console.BackgroundColor = ConsoleColor.Green;
@@ -160,7 +160,7 @@ namespace Game_Hub.View
             string FirstHalfTitle = $"{match.PlayerOne} x";
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine($"{FirstHalfTitle,Constants.WindowWidthSize / 2}" + $" {match.PlayerTwo,-(Constants.WindowWidthSize / 2) - 1}");
+            Console.WriteLine($"{FirstHalfTitle,Constants.WINDOW_WIDTH_SIZE / 2}" + $" {match.PlayerTwo,-(Constants.WINDOW_WIDTH_SIZE / 2) - 1}");
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(AlignMessage($"{match.PlayerOneVictories} x {match.PlayerTwoVictories}"));
