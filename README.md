@@ -9,6 +9,8 @@ Tabela de conteúdos
    * [Instalação](#instalação)
    * [Configuração](#configuração)
    * [Como usar](#como-usar)
+      * [Xadrez](#xadrez)
+      * [Jogo-da-Velha](#jogo-da-velha)
    * [Tecnologias](#tecnologias)
 <!--te-->
 
