@@ -29,7 +29,7 @@ namespace Game_Hub.Controller
 						 blackPiecesPositions = new(), whitePiecesPositions = new();
 
 			string playerEntry, newPosition,
-				   choosePieceMessage = "Insira posição da peça (Ex.: a2)",
+				   choosePieceMessage = "Insira posição da peça:",
 				   choosePositionToMoveMessage = Constants.MESSAGE_CHOOSE_POSITION_TO_MOVE;
 
 			ChessPiece whiteKing = inGamePieces.Find(piece => (piece.Sprite == Constants.KING_SPRITE) && (piece.Color == ChessPieceColor.WHITE));
@@ -75,9 +75,9 @@ namespace Game_Hub.Controller
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?");
+					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
 					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
-					playerEntry = Console.ReadLine();
+					playerEntry = Display.FormatConsoleReadLine();
 				}
 
 
@@ -89,6 +89,7 @@ namespace Game_Hub.Controller
 		private static void ShowChessGame(ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, List<string>? possibleMoves = null)
 		{
 			Display.GameInterface("Jogar!");
+			Display.ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
 			Display.ShowWarning("Insira E para pedir declaração de empate", false);
 			Display.ShowWarning("Insira 0 para escolher outra peça", false);
 			Display.ShowWarning("Insira D para desistir da partida", false);
@@ -177,7 +178,7 @@ namespace Game_Hub.Controller
 			if (existsCapturedPiece)
 			{
 				var pieceToRemove = inGamePieces.Find(piece => piece.Position == newPosition);
-				pieceToRemove.Position = "-1";
+				pieceToRemove.Position = Constants.OUT_OF_GAME;
 				pieceToRemove.IsCaptured = true;
 
 				if (pieceToRemove.Color != ChessPieceColor.WHITE)

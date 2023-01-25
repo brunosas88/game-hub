@@ -20,7 +20,7 @@ namespace Game_Hub.Model.Chess
 			set
 			{
 				_position = value;
-				if (_position != "-1")
+				if (_position != Constants.OUT_OF_GAME)
 				{
 					int[] realPosition = Util.GetRealPosition(value);
 					RealPositionRow = realPosition[0];

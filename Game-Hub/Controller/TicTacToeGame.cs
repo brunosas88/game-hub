@@ -22,7 +22,7 @@ namespace Game_Hub.Controller
 			int position, winner;
 			bool playerOneTurn = true;
 			bool[] moveCount = new bool[9];
-			Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
+			Display.ShowWarning("Insira 0 para declarar empate");
 			gameBoard.PrintBoard();
 
 			do
