@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Game_Hub.Controller;
 using Game_Hub.Model;
+using Game_Hub.Model.BattleShip;
 using Game_Hub.Model.Enums;
 using Game_Hub.Model.TicTacToe;
 using Game_Hub.Utils;
@@ -17,6 +18,46 @@ namespace Game_Hub
 
 		static void Main(string[] args)
 		{
+			List<string> positions = new List<string>();
+			List<Ship> ships = new List<Ship>();
+
+			Ship carrier = new Ship("carrier", 5);
+			carrier.SetPosition();
+
+			positions.AddRange(carrier.Position);
+
+			Ship battleShip = new Ship("battleShip", 4);
+			battleShip.SetPosition(positions);
+
+			positions.AddRange(battleShip.Position);
+
+			Ship cruiser = new Ship("cruiser", 3);
+			cruiser.SetPosition(positions);
+
+			positions.AddRange(cruiser.Position);
+
+			Ship submarine = new Ship("submarine", 3);
+			submarine.SetPosition(positions);
+
+			ships.Add(carrier);
+			ships.Add(battleShip);
+			ships.Add(cruiser);
+			ships.Add(submarine);
+
+			foreach (var ship in ships)
+			{
+				Console.WriteLine(ship.Name);
+				foreach (var item in ship.Position)
+				{
+					Console.Write(" " + item + " ");
+				}
+				Console.WriteLine();
+			}
+
+			Console.ReadLine();
+
+
+
 			Console.OutputEncoding = Encoding.Unicode;
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
@@ -179,9 +220,7 @@ namespace Game_Hub
 						Console.WriteLine(Display.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
 						findPlayerAgain = Display.FormatConsoleReadLine();
 					}					
-				}
-					
-
+				}				
 			} while (findPlayerAgain.ToLower() == "s" );
 
 			return player;			
@@ -241,6 +280,9 @@ namespace Game_Hub
 						break;
 					case GameTitle.JOGO_DA_VELHA:
 						TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
+						break;
+					case GameTitle.BATALHA_NAVAL:
+						BattleShipGame.PlayBattleShipGame(gamePlayers[0], gamePlayers[1]);
 						break;
 				}				
 

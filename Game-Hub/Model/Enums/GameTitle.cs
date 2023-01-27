@@ -8,6 +8,6 @@ namespace Game_Hub.Model.Enums
 {
 	public enum GameTitle
 	{
-		XADREZ = 1, JOGO_DA_VELHA = 2
+		XADREZ = 1, JOGO_DA_VELHA = 2, BATALHA_NAVAL = 3
 	}
 }
