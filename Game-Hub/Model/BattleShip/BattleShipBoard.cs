@@ -26,7 +26,7 @@ namespace Game_Hub.Model.BattleShip
 			foreach (BattleShipFieldInfo field in fields)
 			{
 				col = Constants.COLUMN_REFERENCE[field.Position[0].ToString()];
-				row = int.Parse(field.Position[1].ToString()) - 1;
+				row = int.Parse(field.Position.Substring(1)) - 1;
 
 				_board[row, col] = field;
 			}
