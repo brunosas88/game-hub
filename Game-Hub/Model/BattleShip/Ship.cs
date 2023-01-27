@@ -21,6 +21,7 @@ namespace Game_Hub.Model.BattleShip
 			Name = name;
 			ShipSize = shipSize;
 			ShotTimes = shipSize;
+			IsSunk = false;
 			_position = new List<string>();
 		}
 
@@ -37,6 +38,7 @@ namespace Game_Hub.Model.BattleShip
 
 			do
 			{
+				_position.Clear();
 				generateNewPosition = false;
 				direction = randomPosition.Next(2);
 				fixedPosition = randomPosition.Next(10);				
@@ -68,6 +70,8 @@ namespace Game_Hub.Model.BattleShip
 		public void GotShot()
 		{
 			ShotTimes--;
+			if (ShotTimes == 0)			
+				IsSunk = true;			
 		}
 	}
 }
