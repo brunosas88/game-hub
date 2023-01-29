@@ -1,4 +1,5 @@
 ﻿using Game_Hub.Model;
+using Game_Hub.Model.BattleShip;
 using Game_Hub.Model.Chess;
 using Game_Hub.Model.Enums;
 using Game_Hub.Utils;
@@ -265,6 +266,73 @@ namespace Game_Hub.View
 			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine(AlignMessage("TURNO: Peças " + (playerOneTurn ? "Brancas" : "Pretas") + $" | Jogador {playerName}"));
 			Console.ForegroundColor = ConsoleColor.White;
+		}
+
+		public static void PrintBattleFieldBoard(BattleShipFieldInfo[,] board, string name)
+		{
+			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+			string[] rowReference = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+			int padLeftToCenterBoard = 16;
+
+            Console.WriteLine();
+            Console.WriteLine(AlignMessage($"CAMPO DO JOGADOR {name}"));
+			
+            
+			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
+			foreach (char reference in colReference)
+				Console.Write(" " + reference + " ");
+
+			Console.WriteLine();
+
+			for (int row = 0; row < board.GetLength(0); row++)
+			{
+                if (row == 9)                
+					Console.Write( " " + rowReference[row].PadLeft(padLeftToCenterBoard) + " ");
+				else
+				Console.Write(" ".PadLeft(padLeftToCenterBoard) + rowReference[row] + " ");
+
+				for (int col = 0; col < board.GetLength(1); col++)
+				{
+				    Console.BackgroundColor = ConsoleColor.Blue;
+
+					Console.Write(" ");
+                    
+                    if (!board[row, col].IsShot)                    
+                        Console.Write("~");					
+                    else
+                    {
+                        if (board[row, col].IsShip)
+                        {
+							Console.ForegroundColor = ConsoleColor.Red;
+							Console.Write("●");
+						}
+                        else                        
+							Console.Write("◌");						
+					}    
+                    
+					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+
+					Console.Write(" ");
+
+				}
+				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
+				Console.WriteLine();
+			}
+
+			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
+			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+			Console.WriteLine();
+		}
+
+		public static void ShowBatlheShipFieldCurrentPlay(BattleShipFieldInfo[,] board, string name)
+		{
+		    GameInterface("Jogar!");
+			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
+			ShowWarning("Insira E para pedir declaração de empate", false);
+			ShowWarning("Insira D para desistir da partida", false);
+			PrintBattleFieldBoard(board, name);
+			ShowWarning("Aperte Enter para continuar...");
+			Console.ReadLine();
 		}
 	}
 }

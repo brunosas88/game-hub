@@ -1,43 +1,57 @@
 [
   {
     "Name": "bruno",
-    "PlayOrder": 2,
-    "Password": "123",
-    "MatchesInfo": [
-      {
-        "Game": 1,
-        "Points": 4,
-        "Victories": 2,
-        "Draws": 1,
-        "Defeats": 1
-      },
-      {
-        "Game": 2,
-        "Points": 1,
-        "Victories": 0,
-        "Draws": 1,
-        "Defeats": 0
-      }
-    ]
-  },
-  {
-    "Name": "caio",
     "PlayOrder": 1,
     "Password": "123",
     "MatchesInfo": [
       {
         "Game": 1,
-        "Points": 1,
-        "Victories": 1,
-        "Draws": 1,
-        "Defeats": 2
+        "Points": -1,
+        "Victories": 0,
+        "Draws": 0,
+        "Defeats": 1
       },
       {
         "Game": 2,
-        "Points": 1,
+        "Points": 0,
         "Victories": 0,
-        "Draws": 1,
+        "Draws": 0,
         "Defeats": 0
+      },
+      {
+        "Game": 3,
+        "Points": 7,
+        "Victories": 4,
+        "Draws": 0,
+        "Defeats": 1
+      }
+    ]
+  },
+  {
+    "Name": "joao",
+    "PlayOrder": 2,
+    "Password": "123",
+    "MatchesInfo": [
+      {
+        "Game": 1,
+        "Points": 2,
+        "Victories": 1,
+        "Draws": 0,
+        "Defeats": 0
+      },
+      {
+        "Game": 2,
+        "Points": 0,
+        "Victories": 0,
+        "Draws": 0,
+        "Defeats": 0
+      },
+      {
+        "Game": 3,
+        "Points": -2,
+        "Victories": 1,
+        "Draws": 0,
+        "Defeats": 4
       }
     ]
   }

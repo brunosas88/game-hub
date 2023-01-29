@@ -1,20 +1,38 @@
 [
   {
-    "Game": 2,
+    "Game": 3,
     "PlayerOne": "bruno",
-    "PlayerTwo": "caio",
-    "PlayerOneVictories": 0,
+    "PlayerTwo": "joao",
+    "PlayerOneVictories": 1,
     "PlayerTwoVictories": 0,
-    "Draws": 1,
+    "Draws": 0,
     "MatchesPlayed": 1
   },
   {
-    "Game": 1,
-    "PlayerOne": "caio",
-    "PlayerTwo": "bruno",
+    "Game": 3,
+    "PlayerOne": "bruno",
+    "PlayerTwo": "joao",
     "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 2,
-    "Draws": 1,
-    "MatchesPlayed": 4
+    "PlayerTwoVictories": 0,
+    "Draws": 0,
+    "MatchesPlayed": 1
+  },
+  {
+    "Game": 3,
+    "PlayerOne": "bruno",
+    "PlayerTwo": "joao",
+    "PlayerOneVictories": 2,
+    "PlayerTwoVictories": 1,
+    "Draws": 0,
+    "MatchesPlayed": 3
+  },
+  {
+    "Game": 1,
+    "PlayerOne": "bruno",
+    "PlayerTwo": "joao",
+    "PlayerOneVictories": 0,
+    "PlayerTwoVictories": 1,
+    "Draws": 0,
+    "MatchesPlayed": 1
   }
 ]

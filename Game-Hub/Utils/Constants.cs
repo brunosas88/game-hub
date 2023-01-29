@@ -8,7 +8,9 @@ namespace Game_Hub.Utils
 {
     public static class Constants
     {
-        public const int WINDOW_HEIGHT_SIZE = 32;
+		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
+		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
+		public const int WINDOW_HEIGHT_SIZE = 32;
         public const int WINDOW_WIDTH_SIZE = 66;
         public const int DRAW_POINTS = 1;
         public const int VICTORY_POINTS = 2;
@@ -21,6 +23,7 @@ namespace Game_Hub.Utils
         public const string LOG_MENU_SECOND_OPTION = "Histórico de Partidas";
         public const string MENU_BACK_TO_OPTION = "Voltar ao Menu Anterior";
         public const bool IS_ENCRYPTED = true;
+
 		public const string MESSAGE_CHOOSE_POSITION_TO_MOVE = "Insira nova posição da peça:";
 		public static readonly Dictionary<string, int> LINE_REFERENCE = new Dictionary<string, int>
 		{
@@ -28,7 +31,7 @@ namespace Game_Hub.Utils
 		};
 		public static readonly Dictionary<string, int> COLUMN_REFERENCE = new Dictionary<string, int>
 		{
-			{"a", 0}, {"b", 1}, {"c", 2}, {"d", 3}, {"e", 4}, {"f", 5}, {"g", 6}, {"h", 7}
+			{"a", 0}, {"b", 1}, {"c", 2}, {"d", 3}, {"e", 4}, {"f", 5}, {"g", 6}, {"h", 7} , {"i", 8}, { "j", 9 }
 		};
 		public const string BISHOP_SPRITE = "B";
 		public const string KING_SPRITE = "R";
@@ -39,8 +42,10 @@ namespace Game_Hub.Utils
 		public const string OUT_OF_GAME = "-1";
 		public const string PLAYER_SAVE_FILE = @"\players.json";
 		public const string MATCH_SAVE_FILE = @"\matches.json";
-		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
-		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
+
+		public const int VERTICAL_POSITION = 1;
+		public const int HORIZONTAL_POSITION = 0;
+
 
 	}
 

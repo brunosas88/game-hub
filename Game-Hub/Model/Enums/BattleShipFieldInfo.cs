@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Game_Hub.Model.Enums
 {
-	public enum GameTitle
+	public struct BattleShipFieldInfo
 	{
-		XADREZ = 1, JOGO_DA_VELHA = 2, BATALHA_NAVAL = 3
+		public bool IsShot { get; set; }
+		public bool IsShip { get; set; }
+		public string Position { get; set; }
 	}
 }

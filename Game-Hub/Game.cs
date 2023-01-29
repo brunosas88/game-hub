@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Game_Hub.Controller;
 using Game_Hub.Model;
+using Game_Hub.Model.BattleShip;
 using Game_Hub.Model.Enums;
 using Game_Hub.Model.TicTacToe;
 using Game_Hub.Utils;
@@ -14,7 +15,6 @@ namespace Game_Hub
 {
     class Game
 	{
-
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = Encoding.Unicode;
@@ -179,9 +179,7 @@ namespace Game_Hub
 						Console.WriteLine(Display.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
 						findPlayerAgain = Display.FormatConsoleReadLine();
 					}					
-				}
-					
-
+				}				
 			} while (findPlayerAgain.ToLower() == "s" );
 
 			return player;			
@@ -241,6 +239,9 @@ namespace Game_Hub
 						break;
 					case GameTitle.JOGO_DA_VELHA:
 						TicTacToeGame.PlayTicTacToeGame(gamePlayers[0], gamePlayers[1]);
+						break;
+					case GameTitle.BATALHA_NAVAL:
+						BattleShipGame.PlayBattleShipGame(gamePlayers[0], gamePlayers[1]);
 						break;
 				}				
 
