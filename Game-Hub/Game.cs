@@ -8,6 +8,7 @@ using Game_Hub.Model;
 using Game_Hub.Model.BattleShip;
 using Game_Hub.Model.Enums;
 using Game_Hub.Model.TicTacToe;
+using Game_Hub.Repository;
 using Game_Hub.Utils;
 using Game_Hub.View;
 
@@ -15,21 +16,18 @@ namespace Game_Hub
 {
     class Game
 	{
+		private static PlayerRepository playerRepository = new PlayerRepository();
+		private static MatchRepository matchRepository = new MatchRepository();
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = Encoding.Unicode;
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);			
-
-			List<Player> players = new List<Player>();
-			List<Match> matches = new List<Match>();
+			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);	
+			
 			List<string> mainMenuOptions = new List<string>
 			{Constants.MAIN_MENU_END_GAME_OPTION, Constants.MAIN_MENU_FIRST_OPTION, Constants.MAIN_MENU_SECOND_OPTION,
 			Constants.MAIN_MENU_THIRD_OPTION};
-
-			Util.ReadJSON(ref players, ref matches);
-
 			int option;
 
 			do
@@ -39,28 +37,27 @@ namespace Game_Hub
 				switch (option)
 				{
 					case 1:
-						RegisterPlayer(players);
-						Util.WriteJSON(players, matches);
+						RegisterPlayer();											
 						break;
 					case 2:
-						ChooseLogGame(players, matches);					
+						ChooseLogGame();					
 						break;
 					case 3:
-						SelectGameOptions(players, matches);
-						Util.WriteJSON(players, matches);
+						SelectGameOptions();						
 						break;
 					case 0:
-						Display.GameInterface("Game Over!");
-						Util.WriteJSON(players, matches);
+						Display.GameInterface("Game Over!");						
 						break;		
 				}
 			} while (option != 0);
 		}
 
-		static void RegisterPlayer(List<Player> players)
+		static void RegisterPlayer()
 		{
 			string name, password, warning = "Jogador já Cadastrado!";
 			bool isRegistered;
+			List<Player> players = playerRepository.Read();
+
 			Display.GameInterface("Cadastro de Novo Jogador");
 
 			Console.WriteLine(Display.AlignMessage("Insira nome do novo jogador: "));
@@ -73,7 +70,8 @@ namespace Game_Hub
 
 			if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(password) && !isRegistered)
 			{
-				players.Add(new Player(name, password));
+				playerRepository.Save(new Player(name, password));
+				
 				warning = $"Jogador {name} Cadastrado com Sucesso!";
 			}
 			else if (string.IsNullOrEmpty(name))
@@ -84,9 +82,10 @@ namespace Game_Hub
 			Display.ShowWarning(warning);
 
 			Display.BackToMenu();
+
 		}
 
-		private static void ChooseLogGame(List<Player> players, List<Match> matches)
+		private static void ChooseLogGame()
 		{
 			int option;
 
@@ -94,12 +93,12 @@ namespace Game_Hub
 			{
 				option = GetGameTitle();
 				if (option != 0)				
-					GetLogs(players, matches, (GameTitle)option);
+					GetLogs((GameTitle)option);
 				
 			} while (option != 0);
 		}
 
-		private static void GetLogs(List<Player> players, List<Match> matches, GameTitle game)
+		private static void GetLogs(GameTitle game)
 		{
 			int option;
 			List<string> menuOptions = new List<string>
@@ -112,10 +111,10 @@ namespace Game_Hub
 				switch (option)
 				{
 					case 1:
-						GetPlayersLogs(players, game);
+						GetPlayersLogs(game);
 						break;
 					case 2:
-						GetMatchesLogs(matches, game);						
+						GetMatchesLogs(game);						
 						break;
 					case 0:
 						break;
@@ -123,9 +122,11 @@ namespace Game_Hub
 			} while (option != 0);
 		}
 
-		private static void GetMatchesLogs(List<Match> matches, GameTitle choosenGame)
+		private static void GetMatchesLogs(GameTitle choosenGame)
 		{
 			Display.GameInterface("Histórico de Partidas");
+
+			List<Match> matches = matchRepository.Read();
 
 			List<Match> choosenGameMatches = matches.FindAll(match => match.Game == choosenGame);
 
@@ -135,9 +136,11 @@ namespace Game_Hub
 			Display.BackToMenu();
 		}
 
-		private static void GetPlayersLogs(List<Player> players, GameTitle game)
+		private static void GetPlayersLogs(GameTitle game)
 		{
 			Display.GameInterface("Ranking");
+
+			List<Player> players = playerRepository.Read();
 			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points ).ToList();
 			ranking.Reverse();
 
@@ -147,9 +150,10 @@ namespace Game_Hub
 			Display.BackToMenu();
 		}
 
-		static Player GetPlayer(List<Player> players, int playerOrder)
+		static Player GetPlayer(int playerOrder)
 		{
 			string findPlayerAgain = "n", name, password;
+			List<Player> players = playerRepository.Read();
 			Player? player;
 
 			do
@@ -185,9 +189,9 @@ namespace Game_Hub
 			return player;			
 		}
 
-		static bool SelectGameOptions(List<Player> players, List<Match> matches)
+		static bool SelectGameOptions()
 		{
-			Player[] gamePlayers = SelectPlayers(players);
+			Player[] gamePlayers = SelectPlayers();
 
 			if (gamePlayers.Contains(null))
 				Display.ShowWarning("Jogador(es) Inválidos!");
@@ -195,7 +199,7 @@ namespace Game_Hub
 			{
 				int option = GetGameTitle();
 
-				InitializeGame(matches, gamePlayers, (GameTitle)option);
+				InitializeGame(gamePlayers, (GameTitle)option);
 			}
 			Display.BackToMenu();
 
@@ -218,7 +222,7 @@ namespace Game_Hub
 			return Display.ShowMenu(gameTitles, "Escolha do Jogo");
 		}
 
-		private static void InitializeGame(List<Match> matches, Player[] gamePlayers, GameTitle game)
+		private static void InitializeGame(Player[] gamePlayers, GameTitle game)
 		{
 			string playAgain;
 		
@@ -253,35 +257,32 @@ namespace Game_Hub
 
 			} while (playAgain.ToLower() == "s");
 
-			CalculateMatchResults(game, gamePlayers, matches, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
+			CalculateMatchResults(game, gamePlayers, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
 		}
 
-		private static Player[] SelectPlayers(List<Player> players)
+		private static Player[] SelectPlayers()
 		{
 			Display.GameInterface("Configurações Iniciais do Jogo");
 
 			Player?[] gamePlayers = new Player[2];
 
-			gamePlayers[0] = GetPlayer(players, 1);
+			gamePlayers[0] = GetPlayer(1);
 
-			gamePlayers[1] = GetPlayer(players, 2);
+			gamePlayers[1] = GetPlayer(2);
 
 			return gamePlayers;
 		}
 
-		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, List<Match> matches, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
+		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
 		{
-
 			Match currentMatch = new Match(game, gamePlayers[0].Name, gamePlayers[1].Name);
 			MatchEvaluation matchInfoP1 = gamePlayers[0].MatchesInfo.FirstOrDefault(match => match.Game == game),
 							matchInfoP2 = gamePlayers[1].MatchesInfo.FirstOrDefault(match => match.Game == game);
 
 			currentMatch.PlayerOneVictories = matchInfoP1.Victories - playerOnePreMatchWins;
 			currentMatch.PlayerTwoVictories = matchInfoP2.Victories - playerTwoPreMatchWins;
-			currentMatch.Draws = matchInfoP1.Draws - playerOnepreMatchDraws;
+			currentMatch.Draws = matchInfoP1.Draws - playerOnepreMatchDraws;		
 			
-			matches.Add(currentMatch);
-
 			matchInfoP1.Points += currentMatch.PlayerOneVictories * Constants.VICTORY_POINTS +
 								  currentMatch.PlayerTwoVictories * Constants.DEFEAT_POINTS +
 								  currentMatch.Draws * Constants.DRAW_POINTS;
@@ -289,6 +290,8 @@ namespace Game_Hub
 			matchInfoP2.Points += currentMatch.PlayerTwoVictories * Constants.VICTORY_POINTS +
 								  currentMatch.PlayerOneVictories * Constants.DEFEAT_POINTS +
 								  currentMatch.Draws * Constants.DRAW_POINTS;
+
+			matchRepository.Save(currentMatch);
 		}
 	}
 }
