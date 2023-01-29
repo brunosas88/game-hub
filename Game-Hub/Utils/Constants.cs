@@ -8,6 +8,7 @@ namespace Game_Hub.Utils
 {
     public static class Constants
     {
+		public static readonly string SAVE_DATA_DIRECTORY = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + @"\Data";
 		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
 		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
 		public const int WINDOW_HEIGHT_SIZE = 32;
