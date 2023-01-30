@@ -34,10 +34,10 @@ namespace Game_Hub.Controller
 
 				gameBoard.PrintBoard();
 
+				Console.WriteLine();
 				if (showWarning)
 					Display.ShowWarning("Posição Inválida", false);
 
-				Console.WriteLine();
 				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
 				playerEntry = Display.FormatConsoleReadLine();
 
@@ -48,6 +48,11 @@ namespace Game_Hub.Controller
 					currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					showWarning = false;
 				}
+				else if (playerEntry.ToLower() == "s")
+				{
+					playerEntry = "-1";
+					showWarning = true;
+				}										
 				else if (playerEntry.ToLower() == "e")
 				{
 					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
@@ -63,7 +68,7 @@ namespace Game_Hub.Controller
 				if (!moveCount.Contains(false))
 					playerEntry = "s";
 
-			} while (playerEntry != "r" && playerEntry != "s" && winner == 0);
+			} while (playerEntry.ToLower() != "r" && playerEntry.ToLower() != "s" && winner == 0);
 
 			CalculateResults(playerOne, playerTwo, matchInfoP1, matchInfoP2, playerEntry, winner, playerOneTurn);
 		}

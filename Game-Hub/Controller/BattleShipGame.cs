@@ -57,10 +57,10 @@ namespace Game_Hub.Controller
 
 				BattleShipMatchInfo(playerOne.Name, playerTwo.Name, shipsP1, shipsP2);
 
+				Console.WriteLine();
 				if (showWarning)
 					Display.ShowWarning("Posição Inválida", false);
-
-				Console.WriteLine();
+				
 				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
 				playerEntry = Display.FormatConsoleReadLine();
 
@@ -98,6 +98,11 @@ namespace Game_Hub.Controller
 
 					showWarning = false;
 				}
+				else if (playerEntry.ToLower() == "s")
+				{
+					playerEntry = "-1";
+					showWarning = true;
+				}
 				else if (playerEntry.ToLower() == "e")
 				{
 					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
@@ -109,7 +114,7 @@ namespace Game_Hub.Controller
 					showWarning = true;
 
 
-			} while (playerEntry.ToLower() != "e" && playerEntry.ToLower() != "s" && shipsP1.Exists(ship => ship.IsSunk == false) && shipsP2.Exists(ship => ship.IsSunk == false));
+			} while (playerEntry.ToLower() != "r" && playerEntry.ToLower() != "s" && shipsP1.Exists(ship => ship.IsSunk == false) && shipsP2.Exists(ship => ship.IsSunk == false));
 
 			CalculateResults(playerOne, playerTwo, playerEntry, playerOneTurn, matchInfoP1, matchInfoP2, shipsP1, shipsP2);
 		}
