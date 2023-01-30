@@ -24,7 +24,7 @@ namespace Game_Hub
 			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);
 			Console.OutputEncoding = Encoding.Unicode;
 
-			//Display.ShowLogo();
+			Display.ShowLogo();
 
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
