@@ -8,6 +8,7 @@ namespace Game_Hub.Utils
 {
     public static class Constants
     {
+		public static readonly string SAVE_DATA_DIRECTORY = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + @"\Data";
 		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
 		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
 		public const int WINDOW_HEIGHT_SIZE = 32;
@@ -40,8 +41,6 @@ namespace Game_Hub.Utils
 		public const string QUEEN_SPRITE = "D";
 		public const string ROOK_SPRITE = "T";
 		public const string OUT_OF_GAME = "-1";
-		public const string PLAYER_SAVE_FILE = @"\players.json";
-		public const string MATCH_SAVE_FILE = @"\matches.json";
 
 		public const int VERTICAL_POSITION = 1;
 		public const int HORIZONTAL_POSITION = 0;

@@ -1,11 +1,13 @@
 ﻿using Game_Hub.Model;
 using Game_Hub.Model.BattleShip;
 using Game_Hub.Model.Enums;
+using Game_Hub.Utils;
 using Game_Hub.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -45,21 +47,20 @@ namespace Game_Hub.Controller
 
 			do
 			{
-				boardToBomb = playerOneTurn ? battleShipBoardP2  : battleShipBoardP1;
-				fieldsToBomb = playerOneTurn ?  occupiedFieldsP2 : occupiedFieldsP1;
+				boardToBomb = playerOneTurn ? battleShipBoardP2 : battleShipBoardP1;
+				fieldsToBomb = playerOneTurn ? occupiedFieldsP2 : occupiedFieldsP1;
 				shipsToBomb = playerOneTurn ? shipsP2 : shipsP1;
 
-				Display.GameInterface("Jogar!");
-				Display.ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
-				Display.ShowWarning("Insira E para pedir declaração de empate", false);
-				Display.ShowWarning("Insira D para desistir da partida", false);
+				Display.ShowBattleShipInstructions(currentPlayer.Name, adversaryPlayer.Name);
 
-				Display.PrintBattleFieldBoard(boardToBomb.Board, adversaryPlayer.Name);
+				Display.PrintBattleFieldBoard(boardToBomb.Board);
 
+				BattleShipMatchInfo(playerOne.Name, playerTwo.Name, shipsP1, shipsP2);
+
+				Console.WriteLine();
 				if (showWarning)
 					Display.ShowWarning("Posição Inválida", false);
-
-				Console.WriteLine(Display.AlignMessage($"Turno do Jogador {currentPlayer.Name}"));
+				
 				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
 				playerEntry = Display.FormatConsoleReadLine();
 
@@ -89,13 +90,18 @@ namespace Game_Hub.Controller
 
 					boardToBomb.UpdateBoard(fieldsToBomb);
 
-					Display.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board, adversaryPlayer.Name);
+					Display.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board);
 
 					playerOneTurn = !playerOneTurn;
 					currentPlayer = playerOneTurn ? playerOne : playerTwo;
 					adversaryPlayer = playerOneTurn ? playerTwo : playerOne;
 
-					showWarning = false;					
+					showWarning = false;
+				}
+				else if (playerEntry.ToLower() == "s")
+				{
+					playerEntry = "-1";
+					showWarning = true;
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
@@ -108,9 +114,19 @@ namespace Game_Hub.Controller
 					showWarning = true;
 
 
-			} while (playerEntry.ToLower() != "d" && playerEntry.ToLower() != "s" && shipsP1.Exists(ship => ship.IsSunk == false) && shipsP2.Exists(ship => ship.IsSunk == false));
+			} while (playerEntry.ToLower() != "r" && playerEntry.ToLower() != "s" && shipsP1.Exists(ship => ship.IsSunk == false) && shipsP2.Exists(ship => ship.IsSunk == false));
 
 			CalculateResults(playerOne, playerTwo, playerEntry, playerOneTurn, matchInfoP1, matchInfoP2, shipsP1, shipsP2);
+		}
+
+		private static void BattleShipMatchInfo(string nameP1, string nameP2, List<Ship> shipsP1, List<Ship> shipsP2)
+		{
+			List<string> sunkenShipsP1 = shipsP1.Where(ship => ship.IsSunk).Select(ship => ship.Name + $"({ship.ShipSize})").ToList();
+			List<string> sunkenShipsP2 = shipsP2.Where(ship => ship.IsSunk).Select(ship => ship.Name + $"({ship.ShipSize})").ToList();
+
+			Display.PrintBattleShipMatchInfo(nameP1, sunkenShipsP1);
+			Display.PrintBattleShipMatchInfo(nameP2, sunkenShipsP2);
+			
 		}
 
 		private static void CalculateResults(Player playerOne, Player playerTwo, string playerEntry, bool playerOneTurn, MatchEvaluation matchInfoP1, MatchEvaluation matchInfoP2, List<Ship> shipsP1, List<Ship> shipsP2)
@@ -163,7 +179,7 @@ namespace Game_Hub.Controller
 				bool validCol = colRegex.IsMatch(col);
 				bool validRow = rowRegex.IsMatch(row);
 
-				if (playerEntry.ToLower() == "d" || playerEntry.ToLower() == "e")
+				if (playerEntry.ToLower() == "r" || playerEntry.ToLower() == "e")
 					return false;
 
 				if (validCol && validRow && !occupiedFields.Exists(field => field.Position == playerEntry && field.IsShot == true))
@@ -173,7 +189,6 @@ namespace Game_Hub.Controller
 			}
 			catch (Exception)
 			{
-
 				return false;
 			}
 

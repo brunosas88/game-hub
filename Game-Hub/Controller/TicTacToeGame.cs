@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game_Hub.Model.Enums;
+using System.Text.RegularExpressions;
 
 namespace Game_Hub.Controller
 {
@@ -19,30 +20,61 @@ namespace Game_Hub.Controller
 							matchInfoP2 = playerTwo.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.JOGO_DA_VELHA);
 			Player currentPlayer = playerOne;
 
-			int position, winner;
-			bool playerOneTurn = true;
+			string playerEntry;
+
+			int winner;
+			bool playerOneTurn = true, showWarning = false;
 			bool[] moveCount = new bool[9];
-			Display.ShowWarning("Insira 0 para declarar empate");
-			gameBoard.PrintBoard();
 
 			do
 			{
 				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
-				position = CheckTicTacToeMove(moveCount);
-				if (position != 0)
+
+				Display.ShowTicTacToeInstructions(currentPlayer.Name);
+
+				gameBoard.PrintBoard();
+
+				Console.WriteLine();
+				if (showWarning)
+					Display.ShowWarning("Posição Inválida", false);
+
+				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
+				playerEntry = Display.FormatConsoleReadLine();
+
+				if (ValidateMove(moveCount, playerEntry))
 				{
-					gameBoard.UpdateBoard(position, currentPlayer.PlayOrder);
+					gameBoard.UpdateBoard(int.Parse(playerEntry), currentPlayer.PlayOrder);
 					playerOneTurn = !playerOneTurn;
 					currentPlayer = playerOneTurn ? playerOne : playerTwo;
+					showWarning = false;
 				}
-				Display.GameInterface("Jogar!");
-				Display.ShowWarning("Para sair da partida aperte a tecla 0 (zero)");
-				gameBoard.PrintBoard();
-				winner = CheckTicTacToeWinner(gameBoard.GetBoard());
-				if (!moveCount.Contains(false))
-					position = 0;
-			} while (position != 0 && winner == 0);
+				else if (playerEntry.ToLower() == "s")
+				{
+					playerEntry = "-1";
+					showWarning = true;
+				}										
+				else if (playerEntry.ToLower() == "e")
+				{
+					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
+					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
+					playerEntry = Display.FormatConsoleReadLine();
+					showWarning = false;
+				}
+				else
+					showWarning = true;
 
+				winner = CheckTicTacToeWinner(gameBoard.GetBoard());
+
+				if (!moveCount.Contains(false))
+					playerEntry = "s";
+
+			} while (playerEntry.ToLower() != "r" && playerEntry.ToLower() != "s" && winner == 0);
+
+			CalculateResults(playerOne, playerTwo, matchInfoP1, matchInfoP2, playerEntry, winner, playerOneTurn);
+		}
+
+		private static void CalculateResults(Player playerOne, Player playerTwo, MatchEvaluation matchInfoP1, MatchEvaluation matchInfoP2, string playerEntry, int winner, bool playerOneTurn)
+		{
 			if (winner == 1)
 			{
 				matchInfoP1.Victories++;
@@ -55,11 +87,26 @@ namespace Game_Hub.Controller
 				matchInfoP2.Victories++;
 				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
-			else
+			else if (playerEntry == "s")
 			{
 				matchInfoP1.Draws++;
 				matchInfoP2.Draws++;
 				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
+			}
+			else
+			{
+				if (playerOneTurn)
+				{
+					matchInfoP1.Defeats++;
+					matchInfoP2.Victories++;
+					Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+				}
+				else
+				{
+					matchInfoP1.Victories++;
+					matchInfoP2.Defeats++;
+					Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+				}
 			}
 		}
 
@@ -86,32 +133,17 @@ namespace Game_Hub.Controller
 			return result == 'X' ? 1 : result == 'O' ? 2 : 0;
 		}
 
-		private static int CheckTicTacToeMove(bool[] moveCount)
-		{
-			int position;
-			bool validEndtry;
-			do
+		private static bool ValidateMove(bool[] moveCount, string position)
+		{						
+			Regex numberRegex = new Regex(@"^([1-9]){1}$");
+
+			if (numberRegex.IsMatch(position) && !moveCount[int.Parse(position) - 1])
 			{
-				validEndtry = int.TryParse(Display.FormatConsoleReadLine(), out position);
-
-				if (position > 0 && position < 10)
-				{
-					if (!moveCount[position - 1])
-					{
-						moveCount[position - 1] = true;
-						break;
-					}
-					else
-						Console.WriteLine(Display.AlignMessage("Posição já ocupada, escolha outra: "));
-				}
-				else if (validEndtry && position == 0) // sair do jogo
-					break;
-				else
-					Console.WriteLine(Display.AlignMessage("Insira uma posição válida (1 - 9): "));
-
-			} while (true);
-
-			return position;
+				moveCount[int.Parse(position) - 1] = true;
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 }

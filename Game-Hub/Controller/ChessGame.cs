@@ -69,8 +69,6 @@ namespace Game_Hub.Controller
 					if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)					
 						pawn.IsFirstMove = true;	
 					
-
-
 					playerEntry = newPosition;
 				}
 				else if (playerEntry.ToLower() == "e")
@@ -81,22 +79,18 @@ namespace Game_Hub.Controller
 				}
 
 
-			} while (playerEntry.ToLower() != "d" && !blackKing.IsCaptured && !whiteKing.IsCaptured && playerEntry.ToLower() != "s");
+			} while (playerEntry.ToLower() != "r" && !blackKing.IsCaptured && !whiteKing.IsCaptured && playerEntry.ToLower() != "s");
 
 			CalculateResults(playerOne, playerTwo, matchInfoP1, matchInfoP2, playerOneTurn, playerEntry, whiteKing, blackKing);
 		}
 
 		private static void ShowChessGame(ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, List<string>? possibleMoves = null)
 		{
-			Display.GameInterface("Jogar!");
-			Display.ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
-			Display.ShowWarning("Insira E para pedir declaração de empate", false);
-			Display.ShowWarning("Insira 0 para escolher outra peça", false);
-			Display.ShowWarning("Insira D para desistir da partida", false);
+			Display.ShowChessInstructions(playerOneTurn, playerName);
 
 			Display.PrintChessBoard(board, possibleMoves);
 
-			Display.PrintChessMatchInfo(blackCapturedPieces, whiteCapturedPieces, playerOneTurn, playerName);
+			Display.PrintChessMatchInfo(blackCapturedPieces, whiteCapturedPieces);
 		}
 
 		private static void CalculateResults(Player playerOne, Player playerTwo, MatchEvaluation matchInfoP1, MatchEvaluation matchInfoP2, bool playerOneTurn, string playerEntry, ChessPiece whiteKing, ChessPiece blackKing)
@@ -138,7 +132,7 @@ namespace Game_Hub.Controller
 
 		private static bool ValidatePlayerEntry(string playerEntry)
 		{
-			return playerEntry != "0" && playerEntry.ToLower() != "d" && playerEntry.ToLower() != "e";
+			return playerEntry != "0" && playerEntry.ToLower() != "r" && playerEntry.ToLower() != "e";
 		}
 
 		private static string GetPosition(List<string> positions, string message, ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
