@@ -21,7 +21,7 @@ namespace Game_Hub.Controller
 							matchInfoP2 = playerTwo.MatchesInfo.FirstOrDefault(match => match.Game == GameTitle.XADREZ);
 			Player currentPlayer = playerOne;
 
-			bool playerOneTurn = true;
+			bool playerOneTurn = true, invalidPieceWarning = false;
 
 			List<ChessPiece> inGamePieces = InitializeChessPieces();
 			List<ChessPieceInfo> infoGamePieces = UpdateInfoChessPieces(inGamePieces);
@@ -48,8 +48,11 @@ namespace Game_Hub.Controller
 				ShowChessGame(newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
 				playerEntry = playerOneTurn ? 
-					GetPosition(whitePiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces) : 
-					GetPosition(blackPiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
+					GetPosition(whitePiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces, invalidPieceWarning) : 
+					GetPosition(blackPiecesPositions, choosePieceMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces, invalidPieceWarning);
+
+				if (invalidPieceWarning)
+					invalidPieceWarning = false;
 
 				if (ValidatePlayerEntry(playerEntry))
 				{
@@ -57,19 +60,24 @@ namespace Game_Hub.Controller
 
 					possibleMoves = pieceToMove.Move(playerEntry, infoGamePieces);
 
-					newPosition = GetPosition(possibleMoves, choosePositionToMoveMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
-
-					if (ValidatePlayerEntry(newPosition))
+					if (possibleMoves.Any())
 					{
-						infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
-						playerOneTurn = !playerOneTurn;
-						currentPlayer = playerOneTurn ? playerOne : playerTwo;
-					}
+						newPosition = GetPosition(possibleMoves, choosePositionToMoveMessage, newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
-					if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)					
-						pawn.IsFirstMove = true;	
-					
-					playerEntry = newPosition;
+						if (ValidatePlayerEntry(newPosition))
+						{
+							infoGamePieces = UpdateGamePieces(inGamePieces, pieceToMove, newPosition, ref blackCapturedPieces, ref whiteCapturedPieces);
+							playerOneTurn = !playerOneTurn;
+							currentPlayer = playerOneTurn ? playerOne : playerTwo;
+						}
+
+						if (newPosition == "0" && (pieceToMove is Pawn pawn) && pawn.Position == pawn.OriginalPosition)
+							pawn.IsFirstMove = true;
+
+						playerEntry = newPosition;
+					}
+					else
+						invalidPieceWarning = true;
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
@@ -135,10 +143,9 @@ namespace Game_Hub.Controller
 			return playerEntry != "0" && playerEntry.ToLower() != "r" && playerEntry.ToLower() != "e";
 		}
 
-		private static string GetPosition(List<string> positions, string message, ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
+		private static string GetPosition(List<string> positions, string message, ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, bool showWarning = false)
 		{
-			string? position;
-			bool showWarning = false;
+			string? position;			
 			
 			do
 			{

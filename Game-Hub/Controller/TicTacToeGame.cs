@@ -26,13 +26,14 @@ namespace Game_Hub.Controller
 			bool playerOneTurn = true, showWarning = false;
 			bool[] moveCount = new bool[9];
 
+			Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
+
+			Display.ShowTicTacToeInstructions(currentPlayer.Name);
+
+			gameBoard.PrintBoard();
+
 			do
 			{
-				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
-
-				Display.ShowTicTacToeInstructions(currentPlayer.Name);
-
-				gameBoard.PrintBoard();
 
 				Console.WriteLine();
 				if (showWarning)
@@ -62,6 +63,12 @@ namespace Game_Hub.Controller
 				}
 				else
 					showWarning = true;
+
+				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
+
+				Display.ShowTicTacToeInstructions(currentPlayer.Name);
+
+				gameBoard.PrintBoard();
 
 				winner = CheckTicTacToeWinner(gameBoard.GetBoard());
 

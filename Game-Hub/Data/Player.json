@@ -6,24 +6,24 @@
     "MatchesInfo": [
       {
         "Game": 1,
-        "Points": 2,
+        "Points": 1,
         "Victories": 1,
         "Draws": 2,
-        "Defeats": 2
+        "Defeats": 3
       },
       {
         "Game": 2,
-        "Points": 8,
-        "Victories": 3,
-        "Draws": 4,
-        "Defeats": 2
+        "Points": 16,
+        "Victories": 10,
+        "Draws": 5,
+        "Defeats": 9
       },
       {
         "Game": 3,
-        "Points": 1,
-        "Victories": 0,
+        "Points": -2,
+        "Victories": 2,
         "Draws": 2,
-        "Defeats": 1
+        "Defeats": 8
       }
     ]
   },
@@ -34,24 +34,24 @@
     "MatchesInfo": [
       {
         "Game": 1,
-        "Points": 5,
-        "Victories": 2,
+        "Points": 7,
+        "Victories": 3,
         "Draws": 2,
         "Defeats": 1
       },
       {
         "Game": 2,
-        "Points": 5,
-        "Victories": 2,
-        "Draws": 4,
-        "Defeats": 3
+        "Points": 13,
+        "Victories": 9,
+        "Draws": 5,
+        "Defeats": 10
       },
       {
         "Game": 3,
-        "Points": 4,
-        "Victories": 1,
+        "Points": 16,
+        "Victories": 8,
         "Draws": 2,
-        "Defeats": 0
+        "Defeats": 2
       }
     ]
   }

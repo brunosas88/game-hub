@@ -34,7 +34,7 @@ namespace Game_Hub.View
                     Console.CursorLeft = 0;
                     Console.Write(encrypt ? AlignMessage(new string('*', dataEntry.Length)) : AlignMessage(dataEntry));
 				}
-                else if (!char.IsControl(dataEntryKeyInfo.KeyChar))
+                else if (!char.IsControl(dataEntryKeyInfo.KeyChar) && dataEntry.Length < Constants.MAX_CHARACTER_ALLOWED)
                 {
                     dataEntry += dataEntryKeyInfo.KeyChar;
                     Console.CursorLeft = 0;
@@ -69,28 +69,76 @@ namespace Game_Hub.View
             return string.Format($"{{0,-{blankSpace}}}", string.Format("{0," + ((blankSpace + message.Length) / 2).ToString() + "}", message));
         }
 
-        public static void GameInterface(string message)
+		public static void ShowLogo()
+		{
+			Thread.Sleep(1000);
+			Console.BackgroundColor = ConsoleColor.Blue;
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.SetCursorPosition(0, 4);
+			Console.WriteLine((@"
+	░█▀▀▀█ █  █ █▀▀█ █▀▀█ █▀▀█
+	 ▀▀▀▄▄ █▀▀█ █▄▄█ █▄▄▀ █  █
+	░█▄▄▄█ ▀  ▀ ▀  ▀ ▀ ▀▀ █▀▀▀"));
+			Console.BackgroundColor = ConsoleColor.Black;
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine((@"
+		░█▀▀█ █▀▀█ █▀▀▄ █▀▀ █▀▀█ █▀▀▀█
+		░█    █  █ █  █ █▀▀ █▄▄▀ ▀▀▀▄▄
+		░█▄▄█ ▀▀▀▀ ▀▀▀  ▀▀▀ ▀ ▀▀ █▄▄▄█"));
+			Console.BackgroundColor = ConsoleColor.White;
+			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.WriteLine((@"
+				░█▀▀█ █▀▀█ █▀▄▀█ █▀▀ █▀▀▀█
+				░█ ▄▄ █▄▄█ █ ▀ █ █▀▀ ▀▀▀▄▄
+				░█▄▄█ ▀  ▀ ▀   ▀ ▀▀▀ █▄▄▄█"));
+			Console.BackgroundColor = ConsoleColor.Cyan;
+			Thread.Sleep(1500);
+			Console.Clear();
+			Thread.Sleep(300);
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.SetCursorPosition(0, 7);
+			Console.WriteLine((@"
+   ████████████████████████████████████████████████████████████
+   █▄─▄─▀█─▄▄▄▄█─▄▄─█▄─▄███▄─██─▄█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█─▄▄▄▄█
+   ██─▄─▀█▄▄▄▄─█─██─██─██▀██─██─████─████─██─██─██─█▄▀─██▄▄▄▄─█
+   ▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▄▀▄▄▄▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀"));
+			Console.BackgroundColor = ConsoleColor.Black;
+			Thread.Sleep(1500);
+			Console.Clear();
+			Thread.Sleep(300);
+		}
+
+		public static void ShowTitle()
+		{
+			Console.BackgroundColor = ConsoleColor.Magenta;
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine((AlignMessage("╔" + new string('═', Constants.WINDOW_WIDTH_SIZE - 2) + "╗" + @"
+ ░██████╗░░█████╗░███╗░░░███╗███████╗   ██╗░░██╗██╗░░░██╗██████╗░ 
+║██╔════╝░██╔══██╗████╗░████║██╔════╝   ██║░░██║██║░░░██║██╔══██╗║
+ ██║░░██╗░███████║██╔████╔██║█████╗░░   ███████║██║░░░██║██████╦╝ 
+║██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░   ██╔══██║██║░░░██║██╔══██╗║
+ ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗   ██║░░██║╚██████╔╝██████╦╝ 
+╚░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝   ╚═╝░░╚═╝░╚═════╝░╚═════╝░╝")));
+		}
+
+		public static void GameInterface(string message)
         {
             Console.Clear();
             int blankSpace = Constants.WINDOW_WIDTH_SIZE - 20;
             int totalCharsHeader = Constants.WINDOW_WIDTH_SIZE;
             message = AlignMessage(message, blankSpace);
-            string title = AlignMessage("Hub de Jogos", blankSpace);
+			
+			ShowTitle();		
+
             Console.BackgroundColor = ConsoleColor.Green;
+			string topEdge = "╔" + new string('═', totalCharsHeader - 2) + "╗";
+			string bottomEdge = "╚" + new string('═', totalCharsHeader - 2) + "╝";
 
-            Console.WriteLine(new string('=', totalCharsHeader));
-            Console.Write("=========|");
-            Console.Write(title);
-            Console.Write("|=========\n");
-            Console.WriteLine(new string('=', totalCharsHeader));
-
-            Console.BackgroundColor = ConsoleColor.Magenta;
-
-            Console.WriteLine(new string('-', totalCharsHeader));
-            Console.Write("---------|");
+			Console.WriteLine(topEdge);
+            Console.Write("║▀▄▀▄▀▄▀▄▀");
             Console.Write(message);
-            Console.Write("|---------\n");
-            Console.WriteLine(new string('-', totalCharsHeader));
+            Console.Write("▀▄▀▄▀▄▀▄▀║\n");
+            Console.WriteLine(bottomEdge);
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine();
         }
@@ -144,31 +192,34 @@ namespace Game_Hub.View
         {
             MatchEvaluation matchInfo = player.MatchesInfo.FirstOrDefault(match => match.Game == game);
 			Console.WriteLine();
-            Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine(AlignMessage($"{player.Name}"));
-            Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(AlignMessage($"{matchInfo.Points} Ponto(s) | " +
-                                           $"{matchInfo.Victories} Vitória(s) | " +
-                                           $"{matchInfo.Defeats} Derrota(s) | " +
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
+
+			Console.WriteLine(AlignMessage($"{player.Name}"));
+			
+			Console.WriteLine(AlignMessage($"{matchInfo.Points} Ponto(s) ▪ " +
+                                           $"{matchInfo.Victories} Vitória(s) ▪ " +
+                                           $"{matchInfo.Defeats} Derrota(s) ▪ " +
                                            $"{matchInfo.Draws} Empate(s)"));
-            Console.ForegroundColor = ConsoleColor.White;
-        }
+
+			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
+		}
 
         public static void ShowMatchesDetails(Match match)
         {
             Console.WriteLine();
             string FirstHalfTitle = $"{match.PlayerOne} x";
-            Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine($"{FirstHalfTitle,Constants.WINDOW_WIDTH_SIZE / 2}" + $" {match.PlayerTwo,-(Constants.WINDOW_WIDTH_SIZE / 2) - 1}");
-            Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(AlignMessage($"{match.PlayerOneVictories} x {match.PlayerTwoVictories}"));
-            if (match.Draws > 0) Console.WriteLine(AlignMessage($"Empate(s) : {match.Draws}"));
-            if (match.MatchesPlayed > 1) Console.WriteLine(AlignMessage($"Partidas Consecutivas: {match.MatchesPlayed}"));
-            Console.ForegroundColor = ConsoleColor.White;
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine($"{FirstHalfTitle,Constants.WINDOW_WIDTH_SIZE / 2}" + $" {match.PlayerTwo,-(Constants.WINDOW_WIDTH_SIZE / 2) - 1}");           
+            
+			Console.WriteLine(AlignMessage($"{match.PlayerOneVictories} x {match.PlayerTwoVictories}"));
+            
+			if (match.Draws > 0) Console.WriteLine(AlignMessage($"Empate(s) : {match.Draws}"));
+            
+			if (match.MatchesPlayed > 1) Console.WriteLine(AlignMessage($"Partidas Consecutivas: {match.MatchesPlayed}"));
+            
+			Console.ForegroundColor = ConsoleColor.White;
         }
 
 		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard, List<string>? possibleMoves = null)
@@ -246,7 +297,7 @@ namespace Game_Hub.View
 
 		public static void ShowChessInstructions(bool playerOneTurn, string playerName)
 		{
-			GameInterface("Jogar!");
+			Console.Clear();
 			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
 			ShowWarning("Insira E para pedir declaração de empate", false);
 			ShowWarning("Insira 0 para escolher outra peça", false);
@@ -280,7 +331,7 @@ namespace Game_Hub.View
 
 		public static void ShowBattleShipInstructions(string turnPlayerName, string adversaryPlayerName)
 		{
-			GameInterface("Jogar!");
+			Console.Clear();
 			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
 			ShowWarning("Insira E para pedir declaração de empate", false);
 			ShowWarning("Insira R para desistir da partida", false);
@@ -312,24 +363,22 @@ namespace Game_Hub.View
 
 				for (int col = 0; col < board.GetLength(1); col++)
 				{
-				    Console.BackgroundColor = ConsoleColor.Blue;
-
-					Console.Write(" ");
+				    Console.BackgroundColor = ConsoleColor.Blue;					
                     
                     if (!board[row, col].IsShot)                    
-                        Console.Write("~");					
+                        Console.Write(" ~ ");					
                     else
                     {
                         if (board[row, col].IsShip)
                         {
 							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write("●");
+							Console.Write(" ● ");
 						}
                         else                        
-							Console.Write("◌");						
+							Console.Write(" ○ ");						
 					}                        
 					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-					Console.Write(" ");
+					
 				}
 				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 				Console.WriteLine();
@@ -338,12 +387,10 @@ namespace Game_Hub.View
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
 		}
 
-		public static void ShowBatlheShipFieldCurrentPlay(BattleShipFieldInfo[,] board)
+		public static void ShowBatlheShipFieldCurrentPlay(BattleShipFieldInfo[,] board, string turnPlayerName, string adversaryPlayerName)
 		{
-		    GameInterface("Jogar!");
-			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
-			ShowWarning("Insira E para pedir declaração de empate", false);
-			ShowWarning("Insira R para desistir da partida", false);
+			Console.Clear();
+			ShowBattleShipInstructions(turnPlayerName, adversaryPlayerName);
 			PrintBattleFieldBoard(board);
 			ShowWarning("Aperte Enter para continuar...");
 			Console.ReadLine();
@@ -366,7 +413,7 @@ namespace Game_Hub.View
 
 		public static void ShowTicTacToeInstructions(string name)
 		{
-			GameInterface("Jogar!");
+			Console.Clear();
 			ShowWarning("Insira posições de 1-9", false);
 			ShowWarning("Insira E para pedir declaração de empate", false);
 			ShowWarning("Insira R para desistir da partida", false);
