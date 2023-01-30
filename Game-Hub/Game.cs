@@ -291,6 +291,8 @@ namespace Game_Hub
 								  currentMatch.PlayerOneVictories * Constants.DEFEAT_POINTS +
 								  currentMatch.Draws * Constants.DRAW_POINTS;
 
+			playerRepository.Update(gamePlayers[0]);
+			playerRepository.Update(gamePlayers[1]);
 			matchRepository.Save(currentMatch);
 		}
 	}
