@@ -11,6 +11,7 @@ namespace Game_Hub.Utils
 		public static readonly string SAVE_DATA_DIRECTORY = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + @"\Data";
 		public const ConsoleColor MAIN_FOREGROUND_COLOR = ConsoleColor.White;
 		public const ConsoleColor MAIN_BACKGROUND_COLOR = ConsoleColor.DarkCyan;
+		public const int MAX_CHARACTER_ALLOWED = 15;
 		public const int WINDOW_HEIGHT_SIZE = 32;
         public const int WINDOW_WIDTH_SIZE = 66;
         public const int DRAW_POINTS = 1;
@@ -44,8 +45,6 @@ namespace Game_Hub.Utils
 
 		public const int VERTICAL_POSITION = 1;
 		public const int HORIZONTAL_POSITION = 0;
-
-
 	}
 
 }

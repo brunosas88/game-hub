@@ -34,7 +34,7 @@ namespace Game_Hub.View
                     Console.CursorLeft = 0;
                     Console.Write(encrypt ? AlignMessage(new string('*', dataEntry.Length)) : AlignMessage(dataEntry));
 				}
-                else if (!char.IsControl(dataEntryKeyInfo.KeyChar))
+                else if (!char.IsControl(dataEntryKeyInfo.KeyChar) && dataEntry.Length < Constants.MAX_CHARACTER_ALLOWED)
                 {
                     dataEntry += dataEntryKeyInfo.KeyChar;
                     Console.CursorLeft = 0;

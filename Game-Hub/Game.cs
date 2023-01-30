@@ -60,10 +60,10 @@ namespace Game_Hub
 
 			Display.GameInterface("Cadastro de Novo Jogador");
 
-			Console.WriteLine(Display.AlignMessage("Insira nome do novo jogador: "));
+			Console.WriteLine(Display.AlignMessage($"Insira nome do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
 			name = Display.FormatConsoleReadLine();
 
-			Console.WriteLine(Display.AlignMessage("Insira senha do novo jogador: "));
+			Console.WriteLine(Display.AlignMessage($"Insira senha do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
 			password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 
 			isRegistered = players.Exists(player => player.Name == name);
