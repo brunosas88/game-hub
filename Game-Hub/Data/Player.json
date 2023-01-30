@@ -13,17 +13,17 @@
       },
       {
         "Game": 2,
-        "Points": 9,
-        "Victories": 3,
+        "Points": 16,
+        "Victories": 10,
         "Draws": 5,
-        "Defeats": 2
+        "Defeats": 9
       },
       {
         "Game": 3,
-        "Points": 0,
-        "Victories": 0,
+        "Points": -2,
+        "Victories": 2,
         "Draws": 2,
-        "Defeats": 2
+        "Defeats": 8
       }
     ]
   },
@@ -41,17 +41,17 @@
       },
       {
         "Game": 2,
-        "Points": 6,
-        "Victories": 2,
+        "Points": 13,
+        "Victories": 9,
         "Draws": 5,
-        "Defeats": 3
+        "Defeats": 10
       },
       {
         "Game": 3,
-        "Points": 6,
-        "Victories": 2,
+        "Points": 16,
+        "Victories": 8,
         "Draws": 2,
-        "Defeats": 0
+        "Defeats": 2
       }
     ]
   }
