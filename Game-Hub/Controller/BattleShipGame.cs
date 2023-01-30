@@ -90,7 +90,7 @@ namespace Game_Hub.Controller
 
 					boardToBomb.UpdateBoard(fieldsToBomb);
 
-					Display.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board);
+					Display.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board, currentPlayer.Name, adversaryPlayer.Name);
 
 					playerOneTurn = !playerOneTurn;
 					currentPlayer = playerOneTurn ? playerOne : playerTwo;

@@ -19,19 +19,25 @@ namespace Game_Hub
 		private static PlayerRepository playerRepository = new PlayerRepository();
 		private static MatchRepository matchRepository = new MatchRepository();
 		static void Main(string[] args)
-		{
+		{		
+			Console.CursorVisible = false;
+			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);
 			Console.OutputEncoding = Encoding.Unicode;
+
+			//Display.ShowLogo();
+
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);	
-			
+			Console.CursorVisible = true;
+
 			List<string> mainMenuOptions = new List<string>
 			{Constants.MAIN_MENU_END_GAME_OPTION, Constants.MAIN_MENU_FIRST_OPTION, Constants.MAIN_MENU_SECOND_OPTION,
 			Constants.MAIN_MENU_THIRD_OPTION};
+
 			int option;
 
 			do
-			{					
+			{				
 				option = Display.ShowMenu(mainMenuOptions, "Menu Inicial");
 
 				switch (option)
@@ -104,9 +110,11 @@ namespace Game_Hub
 			List<string> menuOptions = new List<string>
 			{Constants.MENU_BACK_TO_OPTION, Constants.LOG_MENU_FIRST_OPTION, Constants.LOG_MENU_SECOND_OPTION};
 
+			string gameName = Util.CaptalizeString(game.ToString().Replace("_", " "));
+
 			do
 			{
-				option = Display.ShowMenu(menuOptions, "Histórico");
+				option = Display.ShowMenu(menuOptions, $"Histórico de {gameName}");
 
 				switch (option)
 				{
@@ -122,13 +130,14 @@ namespace Game_Hub
 			} while (option != 0);
 		}
 
-		private static void GetMatchesLogs(GameTitle choosenGame)
+		private static void GetMatchesLogs(GameTitle game)
 		{
-			Display.GameInterface("Histórico de Partidas");
+			string gameName = Util.CaptalizeString(game.ToString().Replace("_", " "));
+			Display.GameInterface($"Histórico de Partidas de {gameName}");
 
 			List<Match> matches = matchRepository.Read();
 
-			List<Match> choosenGameMatches = matches.FindAll(match => match.Game == choosenGame);
+			List<Match> choosenGameMatches = matches.FindAll(match => match.Game == game);
 
 			foreach (Match match in choosenGameMatches)
 				Display.ShowMatchesDetails(match);				
@@ -138,7 +147,8 @@ namespace Game_Hub
 
 		private static void GetPlayersLogs(GameTitle game)
 		{
-			Display.GameInterface("Ranking");
+			string gameName = Util.CaptalizeString(game.ToString().Replace("_", " "));
+			Display.GameInterface($"Ranking de {gameName}");
 
 			List<Player> players = playerRepository.Read();
 			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points).ToList();
@@ -215,7 +225,7 @@ namespace Game_Hub
 
 			gameTitles.AddRange(Enum.GetValues(typeof(GameTitle))
 										  .Cast<GameTitle>()
-										  .Select(title => title.ToString().Replace("_", " "))
+										  .Select(title => Util.CaptalizeString(title.ToString().Replace("_", " ")))
 										  .ToList());
 			
 			
