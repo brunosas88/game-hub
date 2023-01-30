@@ -71,7 +71,7 @@ namespace Game_Hub.View
 
 		public static void ShowLogo()
 		{
-			Thread.Sleep(1890);
+			Thread.Sleep(1000);
 			Console.BackgroundColor = ConsoleColor.Blue;
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.SetCursorPosition(0, 4);
@@ -92,9 +92,9 @@ namespace Game_Hub.View
 				░█ ▄▄ █▄▄█ █ ▀ █ █▀▀ ▀▀▀▄▄
 				░█▄▄█ ▀  ▀ ▀   ▀ ▀▀▀ █▄▄▄█"));
 			Console.BackgroundColor = ConsoleColor.Cyan;
-			Thread.Sleep(2000);
+			Thread.Sleep(1500);
 			Console.Clear();
-			Thread.Sleep(500);
+			Thread.Sleep(300);
 			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.SetCursorPosition(0, 7);
 			Console.WriteLine((@"
@@ -103,9 +103,9 @@ namespace Game_Hub.View
    ██─▄─▀█▄▄▄▄─█─██─██─██▀██─██─████─████─██─██─██─█▄▀─██▄▄▄▄─█
    ▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▄▀▄▄▄▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀"));
 			Console.BackgroundColor = ConsoleColor.Black;
-			Thread.Sleep(2000);
+			Thread.Sleep(1500);
 			Console.Clear();
-			Thread.Sleep(500);
+			Thread.Sleep(300);
 		}
 
 		public static void ShowTitle()
