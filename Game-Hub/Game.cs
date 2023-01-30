@@ -208,8 +208,8 @@ namespace Game_Hub
 			else
 			{
 				int option = GetGameTitle();
-
-				InitializeGame(gamePlayers, (GameTitle)option);
+				if (option > 0)	
+					InitializeGame(gamePlayers, (GameTitle)option);
 			}
 			Display.BackToMenu();
 
