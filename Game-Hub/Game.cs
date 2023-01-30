@@ -141,7 +141,7 @@ namespace Game_Hub
 			Display.GameInterface("Ranking");
 
 			List<Player> players = playerRepository.Read();
-			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points ).ToList();
+			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points).ToList();
 			ranking.Reverse();
 
 			foreach (Player player in ranking)

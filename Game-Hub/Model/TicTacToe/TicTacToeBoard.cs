@@ -9,31 +9,31 @@ namespace Game_Hub.Model.TicTacToe
 {
     class TicTacToeBoard
     {
-        private char[,] board;
+        private char[,] _board;
 
         public TicTacToeBoard()
         {
-            board = new char[,]
+            _board = new char[,]
             {
-                {'¹', '|', '²', '|', '³'},
-                {'⁴', '|', '⁵', '|', '⁶'},
-                {'⁷', '|', '⁸', '|', '⁹'}
+                {'¹', '│', '²', '│', '³'},
+                {'⁴', '│', '⁵', '│', '⁶'},
+                {'⁷', '│', '⁸', '│', '⁹'}
             };
         }
 
         public char[,] GetBoard()
         {
-            return board;
+            return _board;
         }
 
         public void PrintBoard()
         {
-            Console.WriteLine(Display.AlignMessage("-------------"));
-            for (int row = 0; row < board.GetLength(0); row++)
+            Console.WriteLine(Display.AlignMessage("─────────────"));
+            for (int row = 0; row < _board.GetLength(0); row++)
             {
-                Console.Write(Display.AlignMessage($"| {board[row, 0]} {board[row, 1]} {board[row, 2]} {board[row, 3]} {board[row, 4]} |"));
+                Console.Write(Display.AlignMessage($"│ {_board[row, 0]} {_board[row, 1]} {_board[row, 2]} {_board[row, 3]} {_board[row, 4]} │"));
                 Console.WriteLine();
-                Console.WriteLine(Display.AlignMessage("-------------"));
+                Console.WriteLine(Display.AlignMessage("─────────────"));
             }
         }
 
@@ -45,31 +45,31 @@ namespace Game_Hub.Model.TicTacToe
             switch (position)
             {
                 case 1:
-                    board[0, 0] = character;
+                    _board[0, 0] = character;
                     break;
                 case 2:
-                    board[0, 2] = character;
+                    _board[0, 2] = character;
                     break;
                 case 3:
-                    board[0, 4] = character;
+                    _board[0, 4] = character;
                     break;
                 case 4:
-                    board[1, 0] = character;
+                    _board[1, 0] = character;
                     break;
                 case 5:
-                    board[1, 2] = character;
+                    _board[1, 2] = character;
                     break;
                 case 6:
-                    board[1, 4] = character;
+                    _board[1, 4] = character;
                     break;
                 case 7:
-                    board[2, 0] = character;
+                    _board[2, 0] = character;
                     break;
                 case 8:
-                    board[2, 2] = character;
+                    _board[2, 2] = character;
                     break;
                 case 9:
-                    board[2, 4] = character;
+                    _board[2, 4] = character;
                     break;
             }
         }

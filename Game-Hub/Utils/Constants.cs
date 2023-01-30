@@ -41,8 +41,6 @@ namespace Game_Hub.Utils
 		public const string QUEEN_SPRITE = "D";
 		public const string ROOK_SPRITE = "T";
 		public const string OUT_OF_GAME = "-1";
-		public const string PLAYER_SAVE_FILE = @"\players.json";
-		public const string MATCH_SAVE_FILE = @"\matches.json";
 
 		public const int VERTICAL_POSITION = 1;
 		public const int HORIZONTAL_POSITION = 0;
