@@ -22,7 +22,7 @@ Tabela de conteúdos
   
 # Configuração
   * Para correta visualização da interface do programa é necessário que o terminal seja configurado para **fonte Consolas** de **tamanho 20** e selecionar a opção **Fonte em Negrito**;
-    * OBS.: o comando ``` Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize); ``` localizado na linha 23 da classe Game.cs funciona somente no Windows, o que significa que para rodar em outro sistema operacional ela deve ser comentada. Lembrando também que não utilizar o sistema Windows acarreta em alguns caracteres não serem reconhecidos e exibidos de forma incorreta e uma interface desalinhada.
+    * OBS.: o comando ``` Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize); ``` localizado na linha 24 da classe Game.cs funciona somente no Windows, o que significa que para rodar em outro sistema operacional ela deve ser comentada. Lembrando também que não utilizar o sistema Windows acarreta em alguns caracteres não serem reconhecidos e exibidos de forma incorreta além de uma interface desalinhada.
   
 # Como Usar
   * Ao iniciar o programa será oferecida as opções de cadastro de jogador, verificar histórico de partidas, iniciar um jogo e sair do programa;
