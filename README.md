@@ -23,6 +23,7 @@ Tabela de conteúdos
   
 # Configuração
   * Para correta visualização da interface do programa é necessário que o terminal seja configurado para **fonte Consolas** de **tamanho 20** e selecionar a opção **Fonte em Negrito**;
+  * O tamanho da janela do console é padronizado e não deve ser alterado;
     * OBS.: o comando ``` Console.SetWindowSize(Constants.WindowWidthSize, Constants.WindowHeightSize); ``` localizado na linha 24 da classe Game.cs funciona somente no Windows, o que significa que para rodar em outro sistema operacional ela deve ser comentada. Lembrando também que não utilizar o sistema Windows acarreta em alguns caracteres não serem reconhecidos e exibidos de forma incorreta além de uma interface desalinhada.
   
 # Como Usar
