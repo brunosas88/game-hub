@@ -81,9 +81,9 @@ namespace Game_Hub.Controller
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
-					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
-					playerEntry = Display.FormatConsoleReadLine();
+					GameHubView.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
+					GameHubView.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
+					playerEntry = GameHubView.FormatConsoleReadLine();
 				}
 
 
@@ -94,11 +94,11 @@ namespace Game_Hub.Controller
 
 		private static void ShowChessGame(ChessPieceInfo[,] board, string playerName, bool playerOneTurn, List<string> blackCapturedPieces, List<string> whiteCapturedPieces, List<string>? possibleMoves = null)
 		{
-			Display.ShowChessInstructions(playerOneTurn, playerName);
+			ChessGameView.ShowChessInstructions(playerOneTurn, playerName);
 
-			Display.PrintChessBoard(board, possibleMoves);
+			ChessGameView.PrintChessBoard(board, possibleMoves);
 
-			Display.PrintChessMatchInfo(blackCapturedPieces, whiteCapturedPieces);
+			ChessGameView.PrintChessMatchInfo(blackCapturedPieces, whiteCapturedPieces);
 		}
 
 		private static void CalculateResults(Player playerOne, Player playerTwo, MatchEvaluation matchInfoP1, MatchEvaluation matchInfoP2, bool playerOneTurn, string playerEntry, ChessPiece whiteKing, ChessPiece blackKing)
@@ -107,19 +107,19 @@ namespace Game_Hub.Controller
 			{
 				matchInfoP1.Victories++;
 				matchInfoP2.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 			}
 			else if (whiteKing.IsCaptured)
 			{
 				matchInfoP1.Defeats++;
 				matchInfoP2.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
 			else if (playerEntry == "s")
 			{
 				matchInfoP1.Draws++;
 				matchInfoP2.Draws++;
-				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
+				GameHubView.ShowWarning("Jogadores finalizaram a partida sem vencedores");
 			}
 			else
 			{
@@ -127,13 +127,13 @@ namespace Game_Hub.Controller
 				{
 					matchInfoP1.Defeats++;
 					matchInfoP2.Victories++;
-					Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 				}
 				else
 				{
 					matchInfoP1.Victories++;
 					matchInfoP2.Defeats++;
-					Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 				}
 			}
 		}
@@ -155,11 +155,11 @@ namespace Game_Hub.Controller
 					ShowChessGame(board, playerName, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
 				if (showWarning)	
-					Display.ShowWarning("Insira uma posição válida", false);
+					GameHubView.ShowWarning("Insira uma posição válida", false);
 				
 
-				Console.WriteLine(Display.AlignMessage(message));
-				position = Display.FormatConsoleReadLine();
+				Console.WriteLine(GameHubView.AlignMessage(message));
+				position = GameHubView.FormatConsoleReadLine();
 				showWarning = true;
 
 			} while ( !positions.Contains(position) && ValidatePlayerEntry(position));
@@ -193,7 +193,7 @@ namespace Game_Hub.Controller
 			if ((pieceToMove is Pawn pawn) && pawn.IsPromoted)
 			{
 
-				option = Display.ShowMenu(promotionPieces, $"Promoção de Peão {pawn.Color} na casa {pawn.Position.ToUpper()}");
+				option = GameHubView.ShowMenu(promotionPieces, $"Promoção de Peão {pawn.Color} na casa {pawn.Position.ToUpper()}");
 				switch ((PromotionChessPieces)option)
 				{
 					case PromotionChessPieces.DAMA:

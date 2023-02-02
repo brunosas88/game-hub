@@ -28,12 +28,12 @@ namespace Game_Hub.Model.TicTacToe
 
         public void PrintBoard()
         {
-            Console.WriteLine(Display.AlignMessage("─────────────"));
+            Console.WriteLine(GameHubView.AlignMessage("─────────────"));
             for (int row = 0; row < _board.GetLength(0); row++)
             {
-                Console.Write(Display.AlignMessage($"│ {_board[row, 0]} {_board[row, 1]} {_board[row, 2]} {_board[row, 3]} {_board[row, 4]} │"));
+                Console.Write(GameHubView.AlignMessage($"│ {_board[row, 0]} {_board[row, 1]} {_board[row, 2]} {_board[row, 3]} {_board[row, 4]} │"));
                 Console.WriteLine();
-                Console.WriteLine(Display.AlignMessage("─────────────"));
+                Console.WriteLine(GameHubView.AlignMessage("─────────────"));
             }
         }
 

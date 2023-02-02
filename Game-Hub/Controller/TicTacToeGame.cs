@@ -26,9 +26,9 @@ namespace Game_Hub.Controller
 			bool playerOneTurn = true, showWarning = false;
 			bool[] moveCount = new bool[9];
 
-			Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
+			Console.WriteLine(GameHubView.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
 
-			Display.ShowTicTacToeInstructions(currentPlayer.Name);
+			TicTacToeGameView.ShowTicTacToeInstructions(currentPlayer.Name);
 
 			gameBoard.PrintBoard();
 
@@ -37,10 +37,10 @@ namespace Game_Hub.Controller
 
 				Console.WriteLine();
 				if (showWarning)
-					Display.ShowWarning("Posição Inválida", false);
+					GameHubView.ShowWarning("Posição Inválida", false);
 
-				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
-				playerEntry = Display.FormatConsoleReadLine();
+				Console.WriteLine(GameHubView.AlignMessage("Insira uma posição:"));
+				playerEntry = GameHubView.FormatConsoleReadLine();
 
 				if (ValidateMove(moveCount, playerEntry))
 				{
@@ -56,17 +56,17 @@ namespace Game_Hub.Controller
 				}										
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
-					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
-					playerEntry = Display.FormatConsoleReadLine();
+					GameHubView.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
+					GameHubView.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
+					playerEntry = GameHubView.FormatConsoleReadLine();
 					showWarning = false;
 				}
 				else
 					showWarning = true;
 
-				Console.WriteLine(Display.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
+				Console.WriteLine(GameHubView.AlignMessage($"Jogador {currentPlayer.Name}, insira posição: "));
 
-				Display.ShowTicTacToeInstructions(currentPlayer.Name);
+				TicTacToeGameView.ShowTicTacToeInstructions(currentPlayer.Name);
 
 				gameBoard.PrintBoard();
 
@@ -86,19 +86,19 @@ namespace Game_Hub.Controller
 			{
 				matchInfoP1.Victories++;
 				matchInfoP2.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 			}
 			else if (winner == 2)
 			{
 				matchInfoP1.Defeats++;
 				matchInfoP2.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
 			else if (playerEntry == "s")
 			{
 				matchInfoP1.Draws++;
 				matchInfoP2.Draws++;
-				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
+				GameHubView.ShowWarning("Jogadores finalizaram a partida sem vencedores");
 			}
 			else
 			{
@@ -106,13 +106,13 @@ namespace Game_Hub.Controller
 				{
 					matchInfoP1.Defeats++;
 					matchInfoP2.Victories++;
-					Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 				}
 				else
 				{
 					matchInfoP1.Victories++;
 					matchInfoP2.Defeats++;
-					Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 				}
 			}
 		}

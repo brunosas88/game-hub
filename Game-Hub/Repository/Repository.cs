@@ -50,7 +50,7 @@ namespace Game_Hub.Repository
 			}
 			catch (Exception)
 			{
-				Display.ShowWarning("Não existem dados a serem carregados");
+				GameHubView.ShowWarning("Não existem dados a serem carregados");
 			}
 
 			return list;

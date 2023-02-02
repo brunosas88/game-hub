@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Game_Hub.View
 {
-    class Display
+    class GameHubView
     {
         public static string FormatConsoleReadLine(bool encrypt = false)
         {
@@ -207,221 +207,24 @@ namespace Game_Hub.View
 
         public static void ShowMatchesDetails(Match match)
         {
-            Console.WriteLine();
+            Console.WriteLine();         
             string FirstHalfTitle = $"{match.PlayerOne} x";
+            const int halfWidthScreenSize = Constants.WINDOW_WIDTH_SIZE / 2;
 
 			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine($"{FirstHalfTitle,Constants.WINDOW_WIDTH_SIZE / 2}" + $" {match.PlayerTwo,-(Constants.WINDOW_WIDTH_SIZE / 2) - 1}");           
+			Console.WriteLine($"{FirstHalfTitle, halfWidthScreenSize}" + $" {match.PlayerTwo, -halfWidthScreenSize}");
             
-			Console.WriteLine(AlignMessage($"{match.PlayerOneVictories} x {match.PlayerTwoVictories}"));
+            Console.WriteLine(AlignMessage($"{match.PlayerOneVictories} x {match.PlayerTwoVictories}"));
             
 			if (match.Draws > 0) Console.WriteLine(AlignMessage($"Empate(s) : {match.Draws}"));
             
 			if (match.MatchesPlayed > 1) Console.WriteLine(AlignMessage($"Partidas Consecutivas: {match.MatchesPlayed}"));
-            
+
+			Console.WriteLine(AlignMessage(match.InitialPlayTime.Date != match.FinalPlayTime.Date ?
+										 $"{match.InitialPlayTime:g} - {match.FinalPlayTime:g}" :
+										 $"{match.InitialPlayTime:g} - {match.FinalPlayTime:t}"));
+
 			Console.ForegroundColor = ConsoleColor.White;
         }
-
-		public static void PrintChessBoard(ChessPieceInfo[,] chessBoard, List<string>? possibleMoves = null)
-		{
-			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
-			char[] rowReference = { '8', '7', '6', '5', '4', '3', '2', '1' };
-			List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Gray, ConsoleColor.DarkGray };
-			List<ConsoleColor> highlightColors = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.DarkRed };
-			bool isDarkerColor = true, isHighlightPositions = false;
-			int padLeftToCenterBoard = 19;
-			int[,] highlightPositions = new int[1,1]; 
-			int[] realPosition;
-
-			if ((possibleMoves != null) && possibleMoves.Count > 0)
-            {
-				highlightPositions = new int[possibleMoves.Count, 2];
-                isHighlightPositions = true;
-
-				for (int row = 0; row < highlightPositions.GetLength(0); row++)
-				{
-					realPosition = Util.GetRealPosition(possibleMoves[row]);
-
-					for (int col = 0; col < highlightPositions.GetLength(1); col++)
-					{
-						highlightPositions[row, col] = realPosition[col];
-					}
-				}
-			}
-
-			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
-			foreach (char reference in colReference)
-				Console.Write(" " + reference + " ");
-
-			Console.WriteLine();
-
-			for (int row = 0; row < chessBoard.GetLength(0); row++)
-			{
-				Console.Write(" ".PadLeft(padLeftToCenterBoard) + rowReference[row] + " ");
-
-				for (int col = 0; col < chessBoard.GetLength(1); col++)
-				{
-                    if (isHighlightPositions)
-                    {
-                        for (int i = 0; i < highlightPositions.GetLength(0); i++)
-                        {
-                            if (row == highlightPositions[i, 0] && col == highlightPositions[i, 1])
-                            {
-								Console.BackgroundColor = isDarkerColor ? highlightColors[0] : highlightColors[1];
-								break;
-							}
-							else
-								Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
-						}
-                    }                           
-					else
-                        Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
-
-					Console.Write(" ");
-					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
-					Console.Write(chessBoard[row, col].Sprite);
-					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-					Console.Write(" ");
-
-					isDarkerColor = !isDarkerColor;
-				}
-				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
-				colors.Reverse();
-                highlightColors.Reverse();
-				Console.WriteLine();
-			}
-
-			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
-
-		public static void ShowChessInstructions(bool playerOneTurn, string playerName)
-		{
-			Console.Clear();
-			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
-			ShowWarning("Insira E para pedir declaração de empate", false);
-			ShowWarning("Insira 0 para escolher outra peça", false);
-			ShowWarning("Insira R para desistir da partida", false);
-			Console.WriteLine();
-
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine(AlignMessage($"TURNO: Jogador {playerName} " + "| PEÇAS: " + (playerOneTurn ? "BRANCAS" : "PRETAS")));
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
-
-		public static void PrintChessMatchInfo(List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
-		{
-            string output;
-
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			output = ("Peças Pretas Capturadas: [");
-			foreach (string piece in blackCapturedPieces)
-				output += ($" {piece} ");
-			output += ("]");			
-			Console.WriteLine(AlignMessage(output));
-
-			output = ($"Peças Brancas Capturadas: [");
-			foreach (string piece in whiteCapturedPieces)
-				output += ($" {piece} ");
-			output += ("]");
-			Console.WriteLine(AlignMessage(output));
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-			Console.WriteLine();
-		}
-
-		public static void ShowBattleShipInstructions(string turnPlayerName, string adversaryPlayerName)
-		{
-			Console.Clear();
-			ShowWarning("Insira posições utilizando notação coluna e linha (Ex.: a2)", false);
-			ShowWarning("Insira E para pedir declaração de empate", false);
-			ShowWarning("Insira R para desistir da partida", false);
-
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine(AlignMessage($"TURNO: Jogador {turnPlayerName} | CAMPO: Jogador {adversaryPlayerName}"));		
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
-
-		public static void PrintBattleFieldBoard(BattleShipFieldInfo[,] board)
-		{
-			char[] colReference = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
-			string[] rowReference = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-			int padLeftToCenterBoard = 16;
-
-			Console.Write(" ".PadLeft(padLeftToCenterBoard) + " " + " ");
-			foreach (char reference in colReference)
-				Console.Write(" " + reference + " ");
-
-			Console.WriteLine();
-
-			for (int row = 0; row < board.GetLength(0); row++)
-			{				
-				if (row == 9)                
-					Console.Write( " " + rowReference[row].PadLeft(padLeftToCenterBoard) + " ");
-				else
-				Console.Write(" ".PadLeft(padLeftToCenterBoard) + rowReference[row] + " ");				
-
-				for (int col = 0; col < board.GetLength(1); col++)
-				{
-				    Console.BackgroundColor = ConsoleColor.Blue;					
-                    
-                    if (!board[row, col].IsShot)                    
-                        Console.Write(" ~ ");					
-                    else
-                    {
-                        if (board[row, col].IsShip)
-                        {
-							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write(" ● ");
-						}
-                        else                        
-							Console.Write(" ○ ");						
-					}                        
-					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-					
-				}
-				Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
-				Console.WriteLine();
-			}
-			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
-
-		public static void ShowBatlheShipFieldCurrentPlay(BattleShipFieldInfo[,] board, string turnPlayerName, string adversaryPlayerName)
-		{
-			Console.Clear();
-			ShowBattleShipInstructions(turnPlayerName, adversaryPlayerName);
-			PrintBattleFieldBoard(board);
-			ShowWarning("Aperte Enter para continuar...");
-			Console.ReadLine();
-		}
-
-		public static void PrintBattleShipMatchInfo(string name, List<string> sunkenShips)
-		{
-			string output = "[";
-
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine(AlignMessage($"Navios de {name} Afundados"));
-
-			foreach (string ship in sunkenShips)
-				output += ($" {ship} ");
-			output += ("]");
-            
-			Console.WriteLine(AlignMessage(output));
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
-
-		public static void ShowTicTacToeInstructions(string name)
-		{
-			Console.Clear();
-			ShowWarning("Insira posições de 1-9", false);
-			ShowWarning("Insira E para pedir declaração de empate", false);
-			ShowWarning("Insira R para desistir da partida", false);
-
-			Console.WriteLine();
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine(AlignMessage($"TURNO: Jogador {name}"));
-			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
-		}
 	}
 }
