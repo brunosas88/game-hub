@@ -100,16 +100,17 @@ namespace Game_Hub.View
 
 		public static void PrintChessMatchInfo(List<string> blackCapturedPieces, List<string> whiteCapturedPieces)
 		{
-			string output;
+			string output = "[";
 
 			Console.ForegroundColor = ConsoleColor.Yellow;
-			output = ("Peças Pretas Capturadas: [");
+			Console.WriteLine(GameHubView.AlignMessage("Peças Pretas Capturadas:"));
 			foreach (string piece in blackCapturedPieces)
 				output += ($" {piece} ");
 			output += ("]");
 			Console.WriteLine(GameHubView.AlignMessage(output));
 
-			output = ($"Peças Brancas Capturadas: [");
+			Console.WriteLine(GameHubView.AlignMessage("Peças Brancas Capturadas:"));
+			output = "[";
 			foreach (string piece in whiteCapturedPieces)
 				output += ($" {piece} ");
 			output += ("]");

@@ -89,6 +89,7 @@ namespace Game_Hub.Controller
 
 			} while (playerEntry.ToLower() != "r" && !blackKing.IsCaptured && !whiteKing.IsCaptured && playerEntry.ToLower() != "s");
 			
+			newChessBoard.UpdateBoard(infoGamePieces);
 			ShowChessGame(newChessBoard.Board, currentPlayer.Name, playerOneTurn, blackCapturedPieces, whiteCapturedPieces);
 
 			CalculateResults(playerOne, playerTwo, matchInfoP1, matchInfoP2, playerOneTurn, playerEntry, whiteKing, blackKing);
