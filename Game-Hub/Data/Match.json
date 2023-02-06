@@ -9,5 +9,16 @@
     "PlayerTwoVictories": 1,
     "Draws": 1,
     "MatchesPlayed": 2
+  },
+  {
+    "Game": 3,
+    "PlayerOne": "bruno",
+    "PlayerTwo": "dummy",
+    "InitialPlayTime": "2023-02-03T10:43:18.5957529-03:00",
+    "FinalPlayTime": "2023-02-03T10:43:48.835276-03:00",
+    "PlayerOneVictories": 0,
+    "PlayerTwoVictories": 1,
+    "Draws": 0,
+    "MatchesPlayed": 1
   }
 ]

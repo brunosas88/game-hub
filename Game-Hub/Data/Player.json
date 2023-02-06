@@ -1,6 +1,6 @@
 [
   {
-    "Name": "dummy",
+    "Name": "bruno",
     "PlayOrder": 1,
     "Password": "123",
     "MatchesInfo": [
@@ -20,15 +20,15 @@
       },
       {
         "Game": 3,
-        "Points": 0,
-        "Victories": 0,
+        "Points": 2,
+        "Victories": 1,
         "Draws": 1,
         "Defeats": 1
       }
     ]
   },
   {
-    "Name": "bruno",
+    "Name": "dummy",
     "PlayOrder": 2,
     "Password": "123",
     "MatchesInfo": [
@@ -48,10 +48,10 @@
       },
       {
         "Game": 3,
-        "Points": 3,
+        "Points": 2,
         "Victories": 1,
         "Draws": 1,
-        "Defeats": 0
+        "Defeats": 1
       }
     ]
   }
