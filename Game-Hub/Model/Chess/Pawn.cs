@@ -23,9 +23,9 @@ namespace Game_Hub.Model.Chess
 					RealPositionRow = realPosition[0];
 					RealPositionCol = realPosition[1];
 				}
-				if (RealPositionRow == 0 && Color == ChessPieceColor.WHITE)				
+				if (RealPositionRow == 0 && Color == ChessPieceColor.BRANCO)				
 				IsPromoted = true;
-				else if (RealPositionRow == 7 && Color == ChessPieceColor.BLACK)
+				else if (RealPositionRow == 7 && Color == ChessPieceColor.PRETO)
 				IsPromoted = true;
 			}
 		}
@@ -53,7 +53,7 @@ namespace Game_Hub.Model.Chess
 			bool isMovimentPossible;
 			List<string> possibleMoves = new List<string>();
 
-			newLinePosition = Color == ChessPieceColor.WHITE ?
+			newLinePosition = Color == ChessPieceColor.BRANCO ?
 			currentLinePosition - 1 :
 			currentLinePosition + 1;
 			newPosition = Util.NominatePosition(newLinePosition, currentColumnPosition);
@@ -61,7 +61,7 @@ namespace Game_Hub.Model.Chess
 
 			if (IsFirstMove && isMovimentPossible)
 			{
-				newLinePosition = Color == ChessPieceColor.WHITE ?
+				newLinePosition = Color == ChessPieceColor.BRANCO ?
 					currentLinePosition - 2 :
 					currentLinePosition + 2;
 				newPosition = Util.NominatePosition(newLinePosition, currentColumnPosition);
@@ -82,7 +82,7 @@ namespace Game_Hub.Model.Chess
 			if (currentColumnPosition > 0 && currentColumnPosition < 8)
 			{
 
-				leftDiagonalPosition = Color == ChessPieceColor.WHITE ?
+				leftDiagonalPosition = Color == ChessPieceColor.BRANCO ?
 					Util.NominatePosition(currentLinePosition - 1, currentColumnPosition - 1) :
 					Util.NominatePosition(currentLinePosition + 1, currentColumnPosition - 1);
 
@@ -92,7 +92,7 @@ namespace Game_Hub.Model.Chess
 
 			if (currentColumnPosition >= 0 && currentColumnPosition < 7)
 			{
-				rightDiagonalPosition = Color == ChessPieceColor.WHITE ?
+				rightDiagonalPosition = Color == ChessPieceColor.BRANCO ?
 					Util.NominatePosition(currentLinePosition - 1, currentColumnPosition + 1) :
 					Util.NominatePosition(currentLinePosition + 1, currentColumnPosition + 1);
 				if ((infoGamePieces.Exists(piece => piece.Position == rightDiagonalPosition && piece.Color != this.Color)))

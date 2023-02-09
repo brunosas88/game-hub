@@ -19,12 +19,12 @@ namespace Game_Hub
 		private static PlayerRepository playerRepository = new PlayerRepository();
 		private static MatchRepository matchRepository = new MatchRepository();
 		static void Main(string[] args)
-		{		
+		{			
 			Console.CursorVisible = false;
 			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);
 			Console.OutputEncoding = Encoding.Unicode;
 
-			Display.ShowLogo();
+			GameHubView.ShowLogo();
 
 			Console.BackgroundColor = Constants.MAIN_BACKGROUND_COLOR;
 			Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
@@ -38,7 +38,7 @@ namespace Game_Hub
 
 			do
 			{				
-				option = Display.ShowMenu(mainMenuOptions, "Menu Inicial");
+				option = GameHubView.ShowMenu(mainMenuOptions, "Menu Inicial");
 
 				switch (option)
 				{
@@ -52,7 +52,7 @@ namespace Game_Hub
 						SelectGameOptions();						
 						break;
 					case 0:
-						Display.GameInterface("Game Over!");						
+						GameHubView.GameInterface("Game Over!");						
 						break;		
 				}
 			} while (option != 0);
@@ -64,13 +64,13 @@ namespace Game_Hub
 			bool isRegistered;
 			List<Player> players = playerRepository.Read();
 
-			Display.GameInterface("Cadastro de Novo Jogador");
+			GameHubView.GameInterface("Cadastro de Novo Jogador");
 
-			Console.WriteLine(Display.AlignMessage($"Insira nome do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
-			name = Display.FormatConsoleReadLine();
+			Console.WriteLine(GameHubView.AlignMessage($"Insira nome do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
+			name = GameHubView.FormatConsoleReadLine();
 
-			Console.WriteLine(Display.AlignMessage($"Insira senha do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
-			password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
+			Console.WriteLine(GameHubView.AlignMessage($"Insira senha do novo jogador (máx. de {Constants.MAX_CHARACTER_ALLOWED} caracteres):"));
+			password = GameHubView.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 
 			isRegistered = players.Exists(player => player.Name == name);
 
@@ -85,9 +85,9 @@ namespace Game_Hub
 			else
 				warning += " Operação Não Realizada!";
 
-			Display.ShowWarning(warning);
+			GameHubView.ShowWarning(warning);
 
-			Display.BackToMenu();
+			GameHubView.BackToMenu();
 
 		}
 
@@ -114,7 +114,7 @@ namespace Game_Hub
 
 			do
 			{
-				option = Display.ShowMenu(menuOptions, $"Histórico de {gameName}");
+				option = GameHubView.ShowMenu(menuOptions, $"Histórico de {gameName}");
 
 				switch (option)
 				{
@@ -133,31 +133,31 @@ namespace Game_Hub
 		private static void GetMatchesLogs(GameTitle game)
 		{
 			string gameName = Util.CaptalizeString(game.ToString().Replace("_", " "));
-			Display.GameInterface($"Histórico de Partidas de {gameName}");
+			GameHubView.GameInterface($"Histórico de Partidas de {gameName}");
 
 			List<Match> matches = matchRepository.Read();
 
 			List<Match> choosenGameMatches = matches.FindAll(match => match.Game == game);
 
 			foreach (Match match in choosenGameMatches)
-				Display.ShowMatchesDetails(match);				
+				GameHubView.ShowMatchesDetails(match);				
 
-			Display.BackToMenu();
+			GameHubView.BackToMenu();
 		}
 
 		private static void GetPlayersLogs(GameTitle game)
 		{
 			string gameName = Util.CaptalizeString(game.ToString().Replace("_", " "));
-			Display.GameInterface($"Ranking de {gameName}");
+			GameHubView.GameInterface($"Ranking de {gameName}");
 
 			List<Player> players = playerRepository.Read();
 			List<Player> ranking = players.OrderBy(player => player.MatchesInfo.Find(matches => matches.Game == game).Points).ToList();
 			ranking.Reverse();
 
 			foreach (Player player in ranking)
-				Display.ShowPlayerDetails(player, game);		
+				GameHubView.ShowPlayerDetails(player, game);		
 			
-			Display.BackToMenu();
+			GameHubView.BackToMenu();
 		}
 
 		static Player GetPlayer(int playerOrder)
@@ -168,30 +168,30 @@ namespace Game_Hub
 
 			do
 			{
-				Display.GameInterface("Selecionar Jogadores");
+				GameHubView.GameInterface("Selecionar Jogadores");
 
-				Console.WriteLine(Display.AlignMessage($"Nome do Jogador {playerOrder}: "));
-				name = Display.FormatConsoleReadLine();
+				Console.WriteLine(GameHubView.AlignMessage($"Nome do Jogador {playerOrder}: "));
+				name = GameHubView.FormatConsoleReadLine();
 
 				player = players.Find(player => player.Name == name);
 
 				if (player == null)
 				{
-					Display.ShowWarning("Jogador Não Encontrado!");
-					Console.WriteLine(Display.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
-					findPlayerAgain = Display.FormatConsoleReadLine();
+					GameHubView.ShowWarning("Jogador Não Encontrado!");
+					Console.WriteLine(GameHubView.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
+					findPlayerAgain = GameHubView.FormatConsoleReadLine();
 				}
 				else
 				{
-					Console.WriteLine(Display.AlignMessage("Favor inserir a senha: "));
-					password = Display.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
+					Console.WriteLine(GameHubView.AlignMessage("Favor inserir a senha: "));
+					password = GameHubView.FormatConsoleReadLine(Constants.IS_ENCRYPTED);
 					if (player.Password == password)					
 						return player;
 					else
 					{
-						Display.ShowWarning("Senha inválida");
-						Console.WriteLine(Display.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
-						findPlayerAgain = Display.FormatConsoleReadLine();
+						GameHubView.ShowWarning("Senha inválida");
+						Console.WriteLine(GameHubView.AlignMessage("Selecionar Outro Jogador? S - sim / Qualquer outra tecla - não: "));
+						findPlayerAgain = GameHubView.FormatConsoleReadLine();
 					}					
 				}				
 			} while (findPlayerAgain.ToLower() == "s" );
@@ -202,16 +202,18 @@ namespace Game_Hub
 		static bool SelectGameOptions()
 		{
 			Player[] gamePlayers = SelectPlayers();
+			int option;
 
 			if (gamePlayers.Contains(null))
-				Display.ShowWarning("Jogador(es) Inválidos!");
-			else
+				GameHubView.ShowWarning("Jogador(es) Inválidos!");
+			do
 			{
-				int option = GetGameTitle();
-				if (option > 0)	
+				option = GetGameTitle();
+				if (option > 0)
 					InitializeGame(gamePlayers, (GameTitle)option);
-			}
-			Display.BackToMenu();
+			} while (option != 0);
+
+			GameHubView.BackToMenu();
 
 			return true;
 		}
@@ -229,7 +231,7 @@ namespace Game_Hub
 										  .ToList());
 			
 			
-			return Display.ShowMenu(gameTitles, "Escolha do Jogo");
+			return GameHubView.ShowMenu(gameTitles, "Escolha do Jogo");
 		}
 
 		private static void InitializeGame(Player[] gamePlayers, GameTitle game)
@@ -240,9 +242,11 @@ namespace Game_Hub
 			    playerTwoPreMatchWins = gamePlayers[1].MatchesInfo.Find(match => match.Game == game).Victories,
 			    playerOnepreMatchDraws = gamePlayers[0].MatchesInfo.Find(match => match.Game == game).Draws;
 
+			DateTime initialPlayTime = DateTime.Now;
+
 			do
 			{
-				Display.GameInterface("Jogar!");
+				GameHubView.GameInterface("Jogar!");
 				gamePlayers[0].PlayOrder = 1;
 				gamePlayers[1].PlayOrder = 2;
 
@@ -259,20 +263,20 @@ namespace Game_Hub
 						break;
 				}				
 
-				Console.WriteLine(Display.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
-				playAgain = Display.FormatConsoleReadLine();
+				Console.WriteLine(GameHubView.AlignMessage("Continuar Jogando? S - sim / Qualquer outra tecla - não: "));
+				playAgain = GameHubView.FormatConsoleReadLine();
 
 				if (playAgain.ToLower() == "s")
 					Array.Reverse(gamePlayers);
 
 			} while (playAgain.ToLower() == "s");
 
-			CalculateMatchResults(game, gamePlayers, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws);
+			CalculateMatchResults(game, gamePlayers, playerOnePreMatchWins, playerTwoPreMatchWins, playerOnepreMatchDraws, initialPlayTime);
 		}
 
 		private static Player[] SelectPlayers()
 		{
-			Display.GameInterface("Configurações Iniciais do Jogo");
+			GameHubView.GameInterface("Configurações Iniciais do Jogo");
 
 			Player?[] gamePlayers = new Player[2];
 
@@ -283,15 +287,20 @@ namespace Game_Hub
 			return gamePlayers;
 		}
 
-		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws)
+		private static void CalculateMatchResults(GameTitle game, Player[] gamePlayers, int playerOnePreMatchWins, int playerTwoPreMatchWins, int playerOnepreMatchDraws, DateTime initialPlayTime)
 		{
-			Match currentMatch = new Match(game, gamePlayers[0].Name, gamePlayers[1].Name);
+			Match currentMatch = new Match(game, gamePlayers[0].Name, gamePlayers[1].Name)
+			{
+				InitialPlayTime = initialPlayTime,
+				FinalPlayTime = DateTime.Now
+			};
+
 			MatchEvaluation matchInfoP1 = gamePlayers[0].MatchesInfo.FirstOrDefault(match => match.Game == game),
 							matchInfoP2 = gamePlayers[1].MatchesInfo.FirstOrDefault(match => match.Game == game);
 
 			currentMatch.PlayerOneVictories = matchInfoP1.Victories - playerOnePreMatchWins;
 			currentMatch.PlayerTwoVictories = matchInfoP2.Victories - playerTwoPreMatchWins;
-			currentMatch.Draws = matchInfoP1.Draws - playerOnepreMatchDraws;		
+			currentMatch.Draws = matchInfoP1.Draws - playerOnepreMatchDraws;	
 			
 			matchInfoP1.Points += currentMatch.PlayerOneVictories * Constants.VICTORY_POINTS +
 								  currentMatch.PlayerTwoVictories * Constants.DEFEAT_POINTS +

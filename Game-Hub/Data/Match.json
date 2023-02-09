@@ -1,8 +1,10 @@
 [
   {
     "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
+    "PlayerOne": "player1",
+    "PlayerTwo": "dummy",
+    "InitialPlayTime": "2023-02-08T15:18:37.8972323-03:00",
+    "FinalPlayTime": "2023-02-08T15:20:05.998588-03:00",
     "PlayerOneVictories": 0,
     "PlayerTwoVictories": 1,
     "Draws": 0,
@@ -10,299 +12,24 @@
   },
   {
     "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 2,
-    "PlayerTwoVictories": 1,
-    "Draws": 1,
-    "MatchesPlayed": 4
+    "PlayerOne": "player1",
+    "PlayerTwo": "dummy",
+    "InitialPlayTime": "2023-02-08T15:24:49.7726954-03:00",
+    "FinalPlayTime": "2023-02-08T15:25:20.2763341-03:00",
+    "PlayerOneVictories": 1,
+    "PlayerTwoVictories": 0,
+    "Draws": 0,
+    "MatchesPlayed": 1
   },
   {
     "Game": 3,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 0,
-    "Draws": 2,
-    "MatchesPlayed": 2
-  },
-  {
-    "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
+    "PlayerOne": "player1",
+    "PlayerTwo": "dummy",
+    "InitialPlayTime": "2023-02-08T15:37:15.8998104-03:00",
+    "FinalPlayTime": "2023-02-08T15:38:15.0573185-03:00",
     "PlayerOneVictories": 0,
     "PlayerTwoVictories": 0,
     "Draws": 1,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 0,
-    "Draws": 1,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 0,
-    "Draws": 1,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 2,
-    "MatchesPlayed": 3
-  },
-  {
-    "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 1,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 0,
-    "Draws": 1,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 2,
-    "Draws": 0,
-    "MatchesPlayed": 2
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 2,
-    "PlayerOne": "joao",
-    "PlayerTwo": "bruno",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 2
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 1,
-    "PlayerTwoVictories": 0,
-    "Draws": 0,
-    "MatchesPlayed": 1
-  },
-  {
-    "Game": 3,
-    "PlayerOne": "bruno",
-    "PlayerTwo": "joao",
-    "PlayerOneVictories": 0,
-    "PlayerTwoVictories": 1,
-    "Draws": 0,
     "MatchesPlayed": 1
   }
 ]

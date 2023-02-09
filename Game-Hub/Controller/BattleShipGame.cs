@@ -51,18 +51,18 @@ namespace Game_Hub.Controller
 				fieldsToBomb = playerOneTurn ? occupiedFieldsP2 : occupiedFieldsP1;
 				shipsToBomb = playerOneTurn ? shipsP2 : shipsP1;
 
-				Display.ShowBattleShipInstructions(currentPlayer.Name, adversaryPlayer.Name);
+				BattleShipGameView.ShowBattleShipInstructions(currentPlayer.Name, adversaryPlayer.Name);
 
-				Display.PrintBattleFieldBoard(boardToBomb.Board);
+				BattleShipGameView.PrintBattleFieldBoard(boardToBomb.Board);
 
 				BattleShipMatchInfo(playerOne.Name, playerTwo.Name, shipsP1, shipsP2);
 
 				Console.WriteLine();
 				if (showWarning)
-					Display.ShowWarning("Posição Inválida", false);
+					GameHubView.ShowWarning("Posição Inválida", false);
 				
-				Console.WriteLine(Display.AlignMessage("Insira uma posição:"));
-				playerEntry = Display.FormatConsoleReadLine();
+				Console.WriteLine(GameHubView.AlignMessage("Insira uma posição:"));
+				playerEntry = GameHubView.FormatConsoleReadLine();
 
 				if (ValidatePlayerEntry(playerEntry, fieldsToBomb))
 				{
@@ -90,7 +90,7 @@ namespace Game_Hub.Controller
 
 					boardToBomb.UpdateBoard(fieldsToBomb);
 
-					Display.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board, currentPlayer.Name, adversaryPlayer.Name);
+					BattleShipGameView.ShowBatlheShipFieldCurrentPlay(boardToBomb.Board, currentPlayer.Name, adversaryPlayer.Name);
 
 					playerOneTurn = !playerOneTurn;
 					currentPlayer = playerOneTurn ? playerOne : playerTwo;
@@ -105,9 +105,9 @@ namespace Game_Hub.Controller
 				}
 				else if (playerEntry.ToLower() == "e")
 				{
-					Display.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
-					Display.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
-					playerEntry = Display.FormatConsoleReadLine();
+					GameHubView.ShowWarning("Outro Jogador Consente na Declaração de Empate?", false);
+					GameHubView.ShowWarning("S - SIM / Qualquer outra tecla - NÃO", false);
+					playerEntry = GameHubView.FormatConsoleReadLine();
 					showWarning = false;
 				}
 				else
@@ -124,8 +124,8 @@ namespace Game_Hub.Controller
 			List<string> sunkenShipsP1 = shipsP1.Where(ship => ship.IsSunk).Select(ship => ship.Name + $"({ship.ShipSize})").ToList();
 			List<string> sunkenShipsP2 = shipsP2.Where(ship => ship.IsSunk).Select(ship => ship.Name + $"({ship.ShipSize})").ToList();
 
-			Display.PrintBattleShipMatchInfo(nameP1, sunkenShipsP1);
-			Display.PrintBattleShipMatchInfo(nameP2, sunkenShipsP2);
+			BattleShipGameView.PrintBattleShipMatchInfo(nameP1, sunkenShipsP1);
+			BattleShipGameView.PrintBattleShipMatchInfo(nameP2, sunkenShipsP2);
 			
 		}
 
@@ -135,19 +135,19 @@ namespace Game_Hub.Controller
 			{
 				matchInfoP1.Victories++;
 				matchInfoP2.Defeats++;
-				Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 			}
 			else if (!shipsP1.Exists(ship => ship.IsSunk == false))
 			{
 				matchInfoP1.Defeats++;
 				matchInfoP2.Victories++;
-				Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+				GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 			}
 			else if (playerEntry == "s")
 			{
 				matchInfoP1.Draws++;
 				matchInfoP2.Draws++;
-				Display.ShowWarning("Jogadores finalizaram a partida sem vencedores");
+				GameHubView.ShowWarning("Jogadores finalizaram a partida sem vencedores");
 			}
 			else
 			{
@@ -155,13 +155,13 @@ namespace Game_Hub.Controller
 				{
 					matchInfoP1.Defeats++;
 					matchInfoP2.Victories++;
-					Display.ShowWarning($"Jogador {playerTwo.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerTwo.Name} venceu!");
 				}
 				else
 				{
 					matchInfoP1.Victories++;
 					matchInfoP2.Defeats++;
-					Display.ShowWarning($"Jogador {playerOne.Name} venceu!");
+					GameHubView.ShowWarning($"Jogador {playerOne.Name} venceu!");
 				}
 			}
 		}

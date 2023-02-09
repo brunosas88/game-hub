@@ -8,6 +8,6 @@ namespace Game_Hub.Model.Enums
 {
     public enum ChessPieceColor
     {
-        WHITE, BLACK
+        BRANCO, PRETO
     }
 }
