@@ -19,7 +19,7 @@ namespace Game_Hub
 		private static PlayerRepository playerRepository = new PlayerRepository();
 		private static MatchRepository matchRepository = new MatchRepository();
 		static void Main(string[] args)
-		{		
+		{			
 			Console.CursorVisible = false;
 			Console.SetWindowSize(Constants.WINDOW_WIDTH_SIZE, Constants.WINDOW_HEIGHT_SIZE);
 			Console.OutputEncoding = Encoding.Unicode;
@@ -202,15 +202,17 @@ namespace Game_Hub
 		static bool SelectGameOptions()
 		{
 			Player[] gamePlayers = SelectPlayers();
+			int option;
 
 			if (gamePlayers.Contains(null))
 				GameHubView.ShowWarning("Jogador(es) Inválidos!");
-			else
+			do
 			{
-				int option = GetGameTitle();
-				if (option > 0)	
+				option = GetGameTitle();
+				if (option > 0)
 					InitializeGame(gamePlayers, (GameTitle)option);
-			}
+			} while (option != 0);
+
 			GameHubView.BackToMenu();
 
 			return true;
