@@ -167,7 +167,7 @@ namespace Game_Hub.View
                     else
                         Console.WriteLine(AlignMessage(menuOptions[option]));                    
                 }
-				Console.WriteLine();
+				
 				if (indexToColorize == 0)
                     ColorizeMessageBackground(menuOptions[indexToColorize]);
                 else

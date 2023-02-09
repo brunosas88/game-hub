@@ -67,7 +67,7 @@ namespace Game_Hub.View
 						Console.BackgroundColor = isDarkerColor ? colors[0] : colors[1];
 
 					Console.Write(" ");
-					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.WHITE ? ConsoleColor.White : ConsoleColor.Black;
+					Console.ForegroundColor = chessBoard[row, col].Color == ChessPieceColor.BRANCO ? ConsoleColor.White : ConsoleColor.Black;
 					Console.Write(chessBoard[row, col].Sprite);
 					Console.ForegroundColor = Constants.MAIN_FOREGROUND_COLOR;
 					Console.Write(" ");
